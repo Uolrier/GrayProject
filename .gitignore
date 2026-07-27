@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Logs
+*.log
+
+# Models
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.safetensors
+*.gguf
+
+# Database
+*.db
+*.sqlite
+
+# Temporary
+tmp/
+temp/
+
+# Cache
+data/cache/
