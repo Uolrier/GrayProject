@@ -9,17 +9,13 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(str(ROOT_DIR))
 
 
-from app import create_app
-
-
-
-app = create_app()
-
+import uvicorn
 
 if __name__ == "__main__":
 
-    app.run(
+    uvicorn.run(
+        "app.main:app",
         host="0.0.0.0",
         port=8000,
-        debug=True
+        reload=True
     )
