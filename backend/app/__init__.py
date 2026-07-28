@@ -1,7 +1,6 @@
 from flask import Flask
 
-from config import settings
-
+from app.core.logger import logger
 
 
 def create_app():
@@ -9,12 +8,21 @@ def create_app():
     app = Flask(__name__)
 
 
+    logger.info(
+        "GrayProject Flask application initialized"
+    )
+
+
     @app.route("/")
     def index():
 
+        logger.info(
+            "Root endpoint accessed"
+        )
+
         return {
-            "project": settings.PROJECT_NAME,
-            "environment": settings.ENVIRONMENT
+            "project": "GrayProject",
+            "status": "running"
         }
 
 
