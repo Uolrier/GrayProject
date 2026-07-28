@@ -1,21 +1,43 @@
 from fastapi import FastAPI
 
-from app.api.health import router as health_router
-
 
 app = FastAPI(
     title="GrayProject API",
-    version="0.1.0"
+    description="""
+    GrayProject Personal AI Operating System Backend.
+
+    Provides APIs for:
+    - System management
+    - AI Agent services
+    - Knowledge management
+    - Local model interaction
+    """,
+    version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 
-app.include_router(
-    health_router
+@app.get(
+    "/",
+    tags=["System"],
+    summary="Root endpoint",
+    description="Check whether GrayProject backend is running."
 )
-
-
-@app.get("/")
-def root():
+def index():
     return {
-        "message": "GrayProject API is running"
+        "project": "GrayProject",
+        "status": "backend running"
+    }
+
+
+@app.get(
+    "/health",
+    tags=["System"],
+    summary="Health check",
+    description="Used for service monitoring."
+)
+def health():
+    return {
+        "status": "ok"
     }
