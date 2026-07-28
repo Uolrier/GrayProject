@@ -1,0 +1,4 @@
+embedding:
+  provider: local
+  model: ""
+  dimension: 1024

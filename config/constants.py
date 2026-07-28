@@ -1,0 +1,9 @@
+"""
+项目常量
+"""
+
+DEFAULT_ENCODING = "utf-8"
+
+DEFAULT_TIMEOUT = 30
+
+MAX_HISTORY = 20
