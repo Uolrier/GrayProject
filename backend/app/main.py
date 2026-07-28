@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 from app.core.exceptions import GrayException
 from app.core.logger import logger
 
+from app.routers import system
+
 
 app = FastAPI(
     title="GrayProject API",
@@ -22,18 +24,17 @@ app = FastAPI(
 )
 
 
+# 注册路由
+app.include_router(
+    system.router
+)
+
+
 @app.get("/")
 def index():
     return {
         "project": "GrayProject",
         "status": "backend running"
-    }
-
-
-@app.get("/health")
-def health():
-    return {
-        "status": "ok"
     }
 
 
