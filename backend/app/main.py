@@ -1,4 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+from app.core.exceptions import GrayException
+from app.core.logger import logger
 
 
 app = FastAPI(
@@ -18,12 +22,7 @@ app = FastAPI(
 )
 
 
-@app.get(
-    "/",
-    tags=["System"],
-    summary="Root endpoint",
-    description="Check whether GrayProject backend is running."
-)
+@app.get("/")
 def index():
     return {
         "project": "GrayProject",
@@ -31,13 +30,46 @@ def index():
     }
 
 
-@app.get(
-    "/health",
-    tags=["System"],
-    summary="Health check",
-    description="Used for service monitoring."
-)
+@app.get("/health")
 def health():
     return {
         "status": "ok"
     }
+
+
+@app.exception_handler(GrayException)
+async def gray_exception_handler(
+    request: Request,
+    exc: GrayException
+):
+
+    logger.error(
+        f"API Error: {exc.code} - {exc.message}"
+    )
+
+    return JSONResponse(
+        status_code=400,
+        content={
+            "code": exc.code,
+            "message": exc.message
+        }
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(
+    request: Request,
+    exc: Exception
+):
+
+    logger.exception(
+        f"Unhandled Exception: {request.url}"
+    )
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "code": "INTERNAL_ERROR",
+            "message": "Internal server error"
+        }
+    )
