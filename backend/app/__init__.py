@@ -1,22 +1,39 @@
-from flask import Flask
-
-from app.utils.logger import setup_logger
-
-
+from flask import Flask, request, jsonify
+from app.core.logger import logger
+from werkzeug.exceptions import HTTPException
 
 def create_app():
 
     app = Flask(__name__)
 
 
-    setup_logger(app)
+    logger.info(
+        "Flask application initialized"
+    )
 
 
+    @app.errorhandler(Exception)
+    def handle_exception(error):
+
+        if isinstance(error, HTTPException):
+            return error
+
+
+        logger.exception(
+            "Unhandled exception: %s %s",
+            request.method,
+            request.path
+        )
+
+        return jsonify({
+            "code": 500,
+            "message": "Internal Server Error"
+        }), 500
 
     @app.route("/")
     def index():
 
-        app.logger.info(
+        logger.info(
             "Index endpoint accessed"
         )
 
@@ -24,6 +41,5 @@ def create_app():
             "project": "GrayProject",
             "status": "running"
         }
-
-
+    
     return app
