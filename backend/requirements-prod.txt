@@ -1,0 +1,7 @@
+# ==========================================
+# GrayProject Production Requirements
+# ==========================================
+
+-r requirements.txt
+
+gunicorn>=23.0
