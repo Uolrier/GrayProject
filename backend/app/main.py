@@ -1,16 +1,21 @@
 from fastapi import FastAPI
 
+from app.api.health import router as health_router
+
 
 app = FastAPI(
     title="GrayProject API",
-    description="Personal AI Operating System Backend",
     version="0.1.0"
 )
 
 
+app.include_router(
+    health_router
+)
+
+
 @app.get("/")
-def index():
+def root():
     return {
-        "project": "GrayProject",
-        "status": "backend running"
+        "message": "GrayProject API is running"
     }
