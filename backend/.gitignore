@@ -1,13 +1,12 @@
+# Environment
+.env
+
 # Python
 __pycache__/
 *.pyc
 
-# Virtual environment
+# Virtual Environment
 .venv/
 
-# Environment
-.env
-
-# IDE
-.vscode/
-.idea/
+# Models
+models/
