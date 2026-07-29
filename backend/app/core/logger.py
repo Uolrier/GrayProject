@@ -16,9 +16,7 @@ def setup_logger():
 
     logger.setLevel(logging.INFO)
 
-    formatter = logging.Formatter(
-        "[%(asctime)s] " "[%(levelname)s] " "%(name)s: " "%(message)s"
-    )
+    formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(name)s: %(message)s")
 
     # 控制台日志
     console_handler = logging.StreamHandler(sys.stdout)

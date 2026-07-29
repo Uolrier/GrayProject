@@ -5,14 +5,12 @@ from app.core.logger import logger
 
 
 def create_app():
-
     app = Flask(__name__)
 
     logger.info("Flask application initialized")
 
     @app.errorhandler(Exception)
     def handle_exception(error):
-
         if isinstance(error, HTTPException):
             return error
 
@@ -22,7 +20,6 @@ def create_app():
 
     @app.route("/")
     def index():
-
         logger.info("Index endpoint accessed")
 
         return {"project": "GrayProject", "status": "running"}

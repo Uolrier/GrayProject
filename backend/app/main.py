@@ -44,7 +44,6 @@ def index():
 
 @app.exception_handler(GrayException)
 async def gray_exception_handler(request: Request, exc: GrayException):
-
     logger.error(f"API Error: {exc.code} - {exc.message}")
 
     return JSONResponse(
@@ -54,7 +53,6 @@ async def gray_exception_handler(request: Request, exc: GrayException):
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-
     logger.exception(f"Unhandled Exception: {request.url}")
 
     return JSONResponse(
