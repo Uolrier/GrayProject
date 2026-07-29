@@ -33,3 +33,8 @@ class Config:
     MODEL_PATH = os.getenv("MODEL_PATH", "./models")
 
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "bge-small")
+
+    # LLM
+    DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
+
+    DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
