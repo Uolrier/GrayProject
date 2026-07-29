@@ -9,6 +9,14 @@ class BaseLLM(ABC):
     所有 LLM 实现必须继承该类
     """
 
+    @property
+    @abstractmethod
+    def model_name(self) -> str:
+        """
+        当前模型名称
+        """
+        pass
+
     @abstractmethod
     def generate(self, prompt: str, **kwargs) -> str:
         """
