@@ -1,3 +1,12 @@
+"""
+GrayProject backend application package.
+"""
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 # from flask import Flask, jsonify, request
 # from werkzeug.exceptions import HTTPException
 
@@ -25,7 +34,3 @@
 #         return {"project": "GrayProject", "status": "running"}
 
 #     return app
-
-"""
-GrayProject backend application package.
-"""
