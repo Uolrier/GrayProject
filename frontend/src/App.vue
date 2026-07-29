@@ -1,18 +1,44 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import api from "./api";
+
+const project = ref("");
+const backendStatus = ref("Loading...");
+
+onMounted(async () => {
+  try {
+    const res = await api.get("/");
+
+    project.value = res.data.project;
+    backendStatus.value = res.data.status;
+  } catch (error) {
+    console.error(error);
+    backendStatus.value = "Connection Failed";
+  }
+});
+</script>
+
 <template>
   <div class="container">
     <h1>GrayProject</h1>
+
     <p class="subtitle">
       Personal AI Operating System
     </p>
 
     <div class="card">
       <h2>Backend</h2>
-      <p>Running</p>
+      <p>{{ backendStatus }}</p>
     </div>
 
     <div class="card">
       <h2>Frontend</h2>
       <p>Running</p>
+    </div>
+
+    <div class="card">
+      <h2>Project</h2>
+      <p>{{ project }}</p>
     </div>
 
     <div class="card">
@@ -41,6 +67,6 @@
   padding: 20px;
   margin: 20px auto;
   max-width: 500px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 </style>

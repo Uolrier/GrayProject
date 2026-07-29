@@ -7,11 +7,10 @@ GrayProject 全局配置加载器
 - 服务配置
 """
 
-
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 
 # ==========================
 # 项目根目录
@@ -41,51 +40,28 @@ class Settings:
     """
 
     # 项目
-    PROJECT_NAME = os.getenv(
-        "PROJECT_NAME",
-        "GrayProject"
-    )
-
+    PROJECT_NAME = os.getenv("PROJECT_NAME", "GrayProject")
 
     # 环境
-    ENVIRONMENT = os.getenv(
-        "ENVIRONMENT",
-        "development"
-    )
-
+    ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
     # Backend
 
-    BACKEND_HOST = os.getenv(
-        "BACKEND_HOST",
-        "127.0.0.1"
-    )
+    BACKEND_HOST = os.getenv("BACKEND_HOST", "127.0.0.1")
 
-
-    BACKEND_PORT = int(
-        os.getenv(
-            "BACKEND_PORT",
-            8000
-        )
-    )
-
+    BACKEND_PORT = int(os.getenv("BACKEND_PORT", 8000))
 
     # 数据目录
 
     DATA_DIR = BASE_DIR / "data"
 
-
     # 模型目录
 
     MODEL_DIR = BASE_DIR / "models"
 
-
     # 日志
 
-    LOG_LEVEL = os.getenv(
-        "LOG_LEVEL",
-        "INFO"
-    )
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
 
 # 单例配置对象

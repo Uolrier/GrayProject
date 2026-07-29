@@ -16,14 +16,9 @@ def setup_logger():
 
     logger.setLevel(logging.INFO)
 
-
     formatter = logging.Formatter(
-        "[%(asctime)s] "
-        "[%(levelname)s] "
-        "%(name)s: "
-        "%(message)s"
+        "[%(asctime)s] " "[%(levelname)s] " "%(name)s: " "%(message)s"
     )
-
 
     # 控制台日志
     console_handler = logging.StreamHandler(sys.stdout)
@@ -31,36 +26,24 @@ def setup_logger():
     console_handler.setLevel(logging.INFO)
     console_handler.setFormatter(formatter)
 
-
-
     # 文件日志目录
     log_dir = "logs"
 
-    os.makedirs(
-        log_dir,
-        exist_ok=True
-    )
-
+    os.makedirs(log_dir, exist_ok=True)
 
     # 文件日志
     file_handler = RotatingFileHandler(
-        os.path.join(
-            log_dir,
-            "app.log"
-        ),
+        os.path.join(log_dir, "app.log"),
         maxBytes=10 * 1024 * 1024,
         backupCount=5,
-        encoding="utf-8"
+        encoding="utf-8",
     )
 
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
 
-
-
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
-
 
     return logger
 
