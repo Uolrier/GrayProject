@@ -1,7 +1,7 @@
 import os
 
-from backend.app.llm.providers.openai_compatible import OpenAICompatibleLLM
-from backend.app.llm.registry import register_provider
+from ..registry import register_provider
+from .openai_compatible import OpenAICompatibleLLM
 
 
 @register_provider("openai")

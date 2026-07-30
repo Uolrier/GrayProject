@@ -1,9 +1,7 @@
-from backend.app.runtime.base import BaseRuntime
-from backend.app.runtime.dummy import DummyRuntime  # noqa: F401 (registers itself)
-from backend.app.runtime.huggingface import (
-    HuggingFaceRuntime,
-)  # noqa: F401 (registers itself)
-from backend.app.runtime.registry import (
+from .base import BaseRuntime
+from .dummy import DummyRuntime
+from .huggingface import HuggingFaceRuntime
+from .registry import (
     RUNTIME_REGISTRY,
     get_runtime,
     list_runtimes,

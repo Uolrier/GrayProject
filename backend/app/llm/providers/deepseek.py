@@ -1,6 +1,7 @@
-from backend.app.config import Config
-from backend.app.llm.providers.openai_compatible import OpenAICompatibleLLM
-from backend.app.llm.registry import register_provider
+from app.config import Config
+
+from ..registry import register_provider
+from .openai_compatible import OpenAICompatibleLLM
 
 
 @register_provider("deepseek")

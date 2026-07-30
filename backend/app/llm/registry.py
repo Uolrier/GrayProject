@@ -2,8 +2,8 @@
 
 from typing import Type
 
-from backend.app.core.registry import Registry
-from backend.app.llm.base import BaseLLM
+from ..core.registry import Registry
+from .base import BaseLLM
 
 PROVIDER_REGISTRY: Registry[Type[BaseLLM]] = Registry()
 

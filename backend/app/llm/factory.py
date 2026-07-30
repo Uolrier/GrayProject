@@ -1,7 +1,8 @@
-from backend.app.config import load_model_config
-from backend.app.llm.base import BaseLLM
-from backend.app.llm.registry import get_provider
-from backend.app.runtime.registry import get_runtime
+from app.config import load_model_config
+from app.runtime.registry import get_runtime
+
+from .base import BaseLLM
+from .registry import get_provider
 
 
 class LLMFactory:

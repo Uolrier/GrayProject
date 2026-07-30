@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from backend.app.runtime.base import BaseRuntime
-from backend.app.runtime.registry import RUNTIME_REGISTRY
+from .base import BaseRuntime
+from .registry import RUNTIME_REGISTRY
 
 
 class HuggingFaceRuntime(BaseRuntime):

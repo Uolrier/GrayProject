@@ -9,7 +9,7 @@ from typing import Iterator
 
 from openai import OpenAI
 
-from backend.app.llm.base import BaseLLM
+from ..base import BaseLLM
 
 
 class OpenAICompatibleLLM(BaseLLM):

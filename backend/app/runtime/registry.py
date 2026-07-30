@@ -2,8 +2,8 @@
 
 from typing import Optional, Type
 
-from backend.app.core.registry import Registry
-from backend.app.runtime.base import BaseRuntime
+from ..core.registry import Registry
+from .base import BaseRuntime
 
 RUNTIME_REGISTRY: Registry[Type[BaseRuntime]] = Registry()
 
