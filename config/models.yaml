@@ -1,0 +1,12 @@
+active_model: deepseek
+
+
+models:
+
+  deepseek:
+    provider: deepseek
+
+
+  qwen_test:
+    runtime: huggingface
+    model_name: Qwen/Qwen2.5-0.5B-Instruct

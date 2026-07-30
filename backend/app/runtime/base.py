@@ -19,6 +19,13 @@ class BaseRuntime(ABC):
     def generate(self, prompt: str, **kwargs):
         """
         Generate response from model.
+
+        Args:
+            prompt: Input text.
+            **kwargs: Additional generation parameters.
+
+        Returns:
+            Generated text response.
         """
         pass
 

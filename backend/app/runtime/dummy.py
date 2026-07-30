@@ -1,5 +1,5 @@
-from .base import BaseRuntime
-from .registry import RuntimeRegistry
+from backend.app.runtime.base import BaseRuntime
+from backend.app.runtime.registry import RUNTIME_REGISTRY
 
 
 class DummyRuntime(BaseRuntime):
@@ -17,7 +17,4 @@ class DummyRuntime(BaseRuntime):
         print("Dummy runtime unloaded")
 
 
-RuntimeRegistry.register(
-    "dummy",
-    DummyRuntime,
-)
+RUNTIME_REGISTRY.register("dummy", DummyRuntime)

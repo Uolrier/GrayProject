@@ -1,4 +1,4 @@
-# Project Atlas Architecture
+# GrayProject Architecture
 
 ## Overview
 
@@ -39,11 +39,11 @@ Current planned modules:
 
 Architecture will evolve during development.
 
-# Project Atlas Architecture
+# GrayProject Architecture
 
 ## 1. 项目目标
 
-Project Atlas 是一个运行在个人计算设备上的 AI 系统。
+GrayProject 是一个运行在个人计算设备上的 AI 系统。
 
 目标：
 
@@ -164,12 +164,12 @@ Phase 9:
 
 ——————————————————————————————————————————————————————————————————————————————————————————
 
-# Project Atlas Architecture
+# GrayProject Architecture
 
 
 ## 1. System Overview
 
-Project Atlas 是一个运行在个人计算设备上的个人AI系统。
+GrayProject 是一个运行在个人计算设备上的个人AI系统。
 
 核心目标：
 

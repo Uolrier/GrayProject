@@ -1,42 +1,23 @@
-from typing import Dict, Type
+"""Runtime registry (uses unified Registry from core)."""
 
-from .base import BaseRuntime
+from typing import Optional, Type
+
+from backend.app.core.registry import Registry
+from backend.app.runtime.base import BaseRuntime
+
+RUNTIME_REGISTRY: Registry[Type[BaseRuntime]] = Registry()
 
 
-class RuntimeRegistry:
-    """
-    Registry for local inference runtimes.
-    """
+def register_runtime(name: str, runtime_cls: Optional[Type[BaseRuntime]] = None):
+    """Register a runtime class. Supports both direct and decorator usage."""
+    return RUNTIME_REGISTRY.register(name, runtime_cls)
 
-    _runtimes: Dict[str, Type[BaseRuntime]] = {}
 
-    @classmethod
-    def register(
-        cls,
-        name: str,
-        runtime_cls: Type[BaseRuntime],
-    ):
-        """
-        Register a runtime implementation.
-        """
-        cls._runtimes[name] = runtime_cls
+def get_runtime(name: str) -> Type[BaseRuntime]:
+    """Get a registered runtime class by name."""
+    return RUNTIME_REGISTRY.get(name)
 
-    @classmethod
-    def get(
-        cls,
-        name: str,
-    ) -> Type[BaseRuntime]:
-        """
-        Get runtime class by name.
-        """
-        if name not in cls._runtimes:
-            raise ValueError(f"Runtime '{name}' is not registered")
 
-        return cls._runtimes[name]
-
-    @classmethod
-    def list(cls):
-        """
-        List available runtimes.
-        """
-        return list(cls._runtimes.keys())
+def list_runtimes() -> list:
+    """List all registered runtime names."""
+    return RUNTIME_REGISTRY.list()

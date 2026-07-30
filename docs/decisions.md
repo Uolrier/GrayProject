@@ -1,4 +1,4 @@
-# Project Atlas Decisions
+# GrayProject Decisions
 
 
 ## Decision 001

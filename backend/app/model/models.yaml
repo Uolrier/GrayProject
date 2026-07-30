@@ -1,9 +1,0 @@
-active_model: deepseek
-
-models:
-
-  deepseek:
-    type: provider
-
-  qwen_local:
-    type: runtime

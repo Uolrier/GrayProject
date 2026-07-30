@@ -1,40 +1,18 @@
-"""
-LLM Provider Registry
+"""LLM provider registry (uses unified Registry from core)."""
 
-负责管理所有 LLM Provider 的注册与获取。
-"""
+from typing import Type
 
-from typing import Dict, Type
+from backend.app.core.registry import Registry
+from backend.app.llm.base import BaseLLM
 
-from .base import BaseLLM
-
-PROVIDERS: Dict[str, Type[BaseLLM]] = {}
+PROVIDER_REGISTRY: Registry[Type[BaseLLM]] = Registry()
 
 
 def register_provider(name: str):
-    """
-    注册 LLM Provider。
-
-    Example:
-
-        @register_provider("deepseek")
-        class DeepSeekLLM(BaseLLM):
-            pass
-    """
-
-    def decorator(cls: Type[BaseLLM]):
-        PROVIDERS[name] = cls
-        return cls
-
-    return decorator
+    """Register a provider class (decorator style)."""
+    return PROVIDER_REGISTRY.register(name)
 
 
 def get_provider(name: str) -> Type[BaseLLM]:
-    """
-    获取 Provider 类。
-    """
-
-    if name not in PROVIDERS:
-        raise ValueError(f"Unknown LLM provider: {name}")
-
-    return PROVIDERS[name]
+    """Get a registered provider class by name."""
+    return PROVIDER_REGISTRY.get(name)

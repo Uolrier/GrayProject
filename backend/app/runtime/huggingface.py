@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from backend.app.runtime.base import BaseRuntime
-from backend.app.runtime.registry import RuntimeRegistry
+from backend.app.runtime.registry import RUNTIME_REGISTRY
 
 
 class HuggingFaceRuntime(BaseRuntime):
@@ -14,7 +14,7 @@ class HuggingFaceRuntime(BaseRuntime):
         model_name: str = "Qwen/Qwen2.5-0.5B-Instruct",
         device: str = "auto",
     ):
-        self.model_name = model_name
+        self._model_name = model_name
         self.device = device
 
         self.tokenizer = None
@@ -24,11 +24,10 @@ class HuggingFaceRuntime(BaseRuntime):
         """
         Load tokenizer and model.
         """
-
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(self._model_name)
 
         self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
+            self._model_name,
             device_map=self.device,
         )
 
@@ -36,7 +35,6 @@ class HuggingFaceRuntime(BaseRuntime):
         """
         Generate text from local model.
         """
-
         if self.model is None or self.tokenizer is None:
             raise RuntimeError("Model is not loaded. Call load() first.")
 
@@ -61,12 +59,8 @@ class HuggingFaceRuntime(BaseRuntime):
         """
         Release model resources.
         """
-
         self.model = None
         self.tokenizer = None
 
 
-RuntimeRegistry.register(
-    "qwen_local",
-    HuggingFaceRuntime,
-)
+RUNTIME_REGISTRY.register("huggingface", HuggingFaceRuntime)

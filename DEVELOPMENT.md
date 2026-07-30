@@ -2,7 +2,7 @@
 
 ## 1. 项目开发原则
 
-Project Atlas 遵循：
+GrayProject 遵循：
 
 - 模块化设计
 - 可扩展架构
