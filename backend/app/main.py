@@ -2,9 +2,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.core.exceptions import GrayException
-from app.core.logger import logger
-from app.routers import system
+from backend.app.core.exceptions import GrayException
+from backend.app.core.logger import logger
+from backend.app.routers import system
 
 app = FastAPI(
     title="GrayProject API",

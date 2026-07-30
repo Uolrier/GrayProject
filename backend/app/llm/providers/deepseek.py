@@ -1,4 +1,4 @@
-from app.config import Config
+from backend.app.config import Config
 
 from ..registry import register_provider
 from .openai_compatible import OpenAICompatibleLLM
