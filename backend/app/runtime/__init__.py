@@ -9,10 +9,6 @@ RuntimeRegistry.register(
     DummyRuntime,
 )
 
-RuntimeRegistry.register(
-    "huggingface",
-    HuggingFaceRuntime,
-)
 
 __all__ = [
     "BaseRuntime",

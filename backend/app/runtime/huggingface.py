@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from .base import BaseRuntime
+from backend.app.runtime.base import BaseRuntime
+from backend.app.runtime.registry import RuntimeRegistry
 
 
 class HuggingFaceRuntime(BaseRuntime):
@@ -63,3 +64,9 @@ class HuggingFaceRuntime(BaseRuntime):
 
         self.model = None
         self.tokenizer = None
+
+
+RuntimeRegistry.register(
+    "qwen_local",
+    HuggingFaceRuntime,
+)
