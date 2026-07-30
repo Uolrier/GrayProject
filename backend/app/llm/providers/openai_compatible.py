@@ -27,19 +27,33 @@ class OpenAICompatibleLLM(BaseLLM):
         model_name: str,
         base_url: str | None = None,
     ):
+        self.api_key = api_key
+        self.base_url = base_url
         self._model_name = model_name
 
-        self.client = OpenAI(
-            api_key=api_key,
-            base_url=base_url,
-        )
+        self.client = None
+
+    def _get_client(self) -> OpenAI:
+        """
+        Lazy initialize OpenAI client.
+        """
+
+        if self.client is None:
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.base_url,
+            )
+
+        return self.client
 
     @property
     def model_name(self) -> str:
         return self._model_name
 
     def generate(self, prompt: str, **kwargs) -> str:
-        response = self.client.chat.completions.create(
+        client = self._get_client()
+
+        response = client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {
@@ -53,7 +67,9 @@ class OpenAICompatibleLLM(BaseLLM):
         return response.choices[0].message.content
 
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
-        response = self.client.chat.completions.create(
+        client = self._get_client()
+
+        response = client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {
