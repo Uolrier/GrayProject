@@ -7,7 +7,8 @@ GrayProject
 │   │   │   ├── agents
 │   │   │   │   └── __init__.py
 │   │   │   ├── embeddings
-│   │   │   │   └── __init__.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── base.py
 │   │   │   ├── prompts
 │   │   │   │   ├── builtin
 │   │   │   │   │   ├── agent.txt
@@ -157,6 +158,9 @@ GrayProject
 │   │   └── __init__.py
 │   ├── unit
 │   │   ├── ai
+│   │   │   ├── embeddings
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── test_base.py
 │   │   │   ├── prompts
 │   │   │   │   ├── __init__.py
 │   │   │   │   └── test_prompt.py
@@ -189,6 +193,7 @@ GrayProject
 ├── CONTRIBUTING.md
 ├── DEVELOPMENT.md
 ├── LICENSE
+├── project_tree.txt
 ├── pyproject.toml
 ├── README.md
 ├── requirements.txt

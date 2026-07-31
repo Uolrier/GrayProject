@@ -63,6 +63,30 @@ class Settings:
 
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
+    # ==========================
+    # OpenAI
+    # ==========================
+
+    OPENAI_API_KEY = os.getenv(
+        "OPENAI_API_KEY",
+        "",
+    )
+
+    OPENAI_BASE_URL = os.getenv(
+        "OPENAI_BASE_URL",
+        None,
+    )
+
+    OPENAI_MODEL = os.getenv(
+        "OPENAI_MODEL",
+        "gpt-4.1-mini",
+    )
+
+    OPENAI_EMBEDDING_MODEL = os.getenv(
+        "OPENAI_EMBEDDING_MODEL",
+        "text-embedding-3-small",
+    )
+
 
 # 单例配置对象
 
