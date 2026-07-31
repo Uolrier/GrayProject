@@ -10,6 +10,7 @@ from typing import Iterator
 from openai import OpenAI
 
 from ..base import BaseLLM
+from ..schema import ChatRequest, ChatResponse, TokenUsage
 
 
 class OpenAICompatibleLLM(BaseLLM):
@@ -49,6 +50,57 @@ class OpenAICompatibleLLM(BaseLLM):
     @property
     def model_name(self) -> str:
         return self._model_name
+
+    def chat(self, request: ChatRequest) -> ChatResponse:
+        """
+        Chat completion interface.
+        """
+
+        client = self._get_client()
+
+        messages = []
+
+        if request.system_prompt:
+            messages.append(
+                {
+                    "role": "system",
+                    "content": request.system_prompt,
+                }
+            )
+
+        messages.extend(
+            [
+                {
+                    "role": msg.role,
+                    "content": msg.content,
+                }
+                for msg in request.messages
+            ]
+        )
+
+        response = client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            temperature=request.temperature,
+            max_tokens=request.max_tokens,
+            stream=False,
+        )
+
+        usage = None
+
+        if response.usage:
+            usage = TokenUsage(
+                prompt_tokens=response.usage.prompt_tokens,
+                completion_tokens=response.usage.completion_tokens,
+                total_tokens=response.usage.total_tokens,
+            )
+
+        return ChatResponse(
+            content=response.choices[0].message.content,
+            model=response.model,
+            provider=self.__class__.__name__,
+            usage=usage,
+        )
 
     def generate(self, prompt: str, **kwargs) -> str:
         client = self._get_client()

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Iterator
 
+from .schema import ChatRequest, ChatResponse
+
 
 class BaseLLM(ABC):
     """
@@ -14,6 +16,20 @@ class BaseLLM(ABC):
     def model_name(self) -> str:
         """
         当前模型名称
+        """
+        pass
+
+    @abstractmethod
+    def chat(self, request: ChatRequest) -> ChatResponse:
+        """
+        Chat接口
+
+        Args:
+            request:
+                LLM聊天请求协议
+
+        Returns:
+            LLM聊天响应协议
         """
         pass
 

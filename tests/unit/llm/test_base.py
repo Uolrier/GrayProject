@@ -1,17 +1,21 @@
 import pytest
 
 from backend.app.llm.base import BaseLLM
+from backend.app.llm.schema import ChatResponse
 
 
 class MockLLM(BaseLLM):
     @property
-    def model_name(self) -> str:
+    def model_name(self):
         return "mock-model"
 
-    def generate(self, prompt: str, **kwargs) -> str:
+    def chat(self, request):
+        return ChatResponse(content="mock response")
+
+    def generate(self, prompt, **kwargs):
         return f"response: {prompt}"
 
-    def stream(self, prompt: str, **kwargs):
+    def stream(self, prompt, **kwargs):
         yield f"response: {prompt}"
 
 

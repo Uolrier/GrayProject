@@ -20,6 +20,8 @@ class ChatRequest:
 
     messages: List[ChatMessage]
 
+    system_prompt: Optional[str] = None
+
     model: Optional[str] = None
 
     temperature: float = 0.7
