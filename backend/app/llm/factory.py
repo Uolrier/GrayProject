@@ -1,5 +1,5 @@
-from backend.app.config import load_model_config
 from backend.app.runtime.registry import get_runtime
+from config.settings import load_model_config
 
 from .base import BaseLLM
 from .registry import get_provider

@@ -5,11 +5,14 @@ GrayProject 全局配置加载器
 - 环境变量
 - 项目路径
 - 服务配置
+- AI模型配置
+- YAML配置加载
 """
 
 import os
 from pathlib import Path
 
+import yaml
 from dotenv import load_dotenv
 
 # ==========================
@@ -39,29 +42,114 @@ class Settings:
     GrayProject 全局配置
     """
 
-    # 项目
-    PROJECT_NAME = os.getenv("PROJECT_NAME", "GrayProject")
+    # ==========================
+    # Project
+    # ==========================
 
-    # 环境
-    ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+    PROJECT_NAME = os.getenv(
+        "PROJECT_NAME",
+        "GrayProject",
+    )
 
+    ENVIRONMENT = os.getenv(
+        "ENVIRONMENT",
+        "development",
+    )
+
+    # ==========================
     # Backend
+    # ==========================
 
-    BACKEND_HOST = os.getenv("BACKEND_HOST", "127.0.0.1")
+    BACKEND_HOST = os.getenv(
+        "BACKEND_HOST",
+        "127.0.0.1",
+    )
 
-    BACKEND_PORT = int(os.getenv("BACKEND_PORT", 8000))
+    BACKEND_PORT = int(
+        os.getenv(
+            "BACKEND_PORT",
+            8000,
+        )
+    )
 
-    # 数据目录
+    FLASK_ENV = os.getenv(
+        "FLASK_ENV",
+        "development",
+    )
+
+    FLASK_PORT = int(
+        os.getenv(
+            "FLASK_PORT",
+            8000,
+        )
+    )
+
+    # ==========================
+    # Database
+    # ==========================
+
+    DB_HOST = os.getenv(
+        "DB_HOST",
+        "localhost",
+    )
+
+    DB_PORT = int(
+        os.getenv(
+            "DB_PORT",
+            3306,
+        )
+    )
+
+    DB_NAME = os.getenv(
+        "DB_NAME",
+        "grayproject",
+    )
+
+    DB_USER = os.getenv(
+        "DB_USER",
+        "root",
+    )
+
+    DB_PASSWORD = os.getenv(
+        "DB_PASSWORD",
+        "",
+    )
+
+    # ==========================
+    # Path
+    # ==========================
 
     DATA_DIR = BASE_DIR / "data"
 
-    # 模型目录
-
     MODEL_DIR = BASE_DIR / "models"
 
-    # 日志
+    MODEL_PATH = os.getenv(
+        "MODEL_PATH",
+        "./models",
+    )
 
-    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    # ==========================
+    # Logging
+    # ==========================
+
+    LOG_LEVEL = os.getenv(
+        "LOG_LEVEL",
+        "INFO",
+    )
+
+    # ==========================
+    # Embedding
+    # ==========================
+
+    EMBEDDING_MODEL = os.getenv(
+        "EMBEDDING_MODEL",
+        "bge-small",
+    )
+
+    OPENAI_EMBEDDING_MODEL = os.getenv(
+        "OPENAI_EMBEDDING_MODEL",
+        "text-embedding-3-small",
+    )
 
     # ==========================
     # OpenAI
@@ -82,12 +170,43 @@ class Settings:
         "gpt-4.1-mini",
     )
 
-    OPENAI_EMBEDDING_MODEL = os.getenv(
-        "OPENAI_EMBEDDING_MODEL",
-        "text-embedding-3-small",
+    # ==========================
+    # DeepSeek
+    # ==========================
+
+    DEEPSEEK_API_KEY = os.getenv(
+        "DEEPSEEK_API_KEY",
+        "",
+    )
+
+    DEEPSEEK_MODEL = os.getenv(
+        "DEEPSEEK_MODEL",
+        "deepseek-chat",
     )
 
 
+# ==========================
 # 单例配置对象
+# ==========================
 
 settings = Settings()
+
+
+# ==========================
+# YAML 配置加载
+# ==========================
+
+MODEL_CONFIG_PATH = BASE_DIR / "config" / "models.yaml"
+
+
+def load_model_config():
+    """
+    Load model switching configuration.
+    """
+
+    with open(
+        MODEL_CONFIG_PATH,
+        "r",
+        encoding="utf-8",
+    ) as f:
+        return yaml.safe_load(f)
