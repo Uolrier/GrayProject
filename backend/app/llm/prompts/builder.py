@@ -20,6 +20,7 @@ class PromptBuilder:
         user_message: str,
         history: list[dict] | None = None,
         context: str | None = None,
+        debugger: object | None = None,
     ) -> list[dict]:
         """Build message list for LLM input."""
 
@@ -50,5 +51,10 @@ class PromptBuilder:
                 "content": user_message,
             }
         )
+
+        if debugger:
+            debugger.log(
+                messages=messages,
+            )
 
         return messages
