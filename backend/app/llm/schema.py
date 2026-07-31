@@ -18,7 +18,9 @@ class ChatRequest:
     LLM聊天请求协议
     """
 
-    messages: List[ChatMessage]
+    session_id: Optional[str] = None
+
+    messages: List[ChatMessage] = field(default_factory=list)
 
     system_prompt: Optional[str] = None
 
