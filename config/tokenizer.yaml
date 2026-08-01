@@ -1,0 +1,7 @@
+default: huggingface
+
+
+tokenizers:
+
+  huggingface:
+    model_name: GrayProject

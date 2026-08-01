@@ -183,6 +183,11 @@ class Settings:
         "DEEPSEEK_MODEL",
         "deepseek-chat",
     )
+    # ==========================
+    # Tokenizer
+    # ==========================
+
+    TOKENIZER_CONFIG_PATH = BASE_DIR / "config" / "tokenizer.yaml"
 
 
 # ==========================
