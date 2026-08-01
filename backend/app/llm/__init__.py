@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 
 from .base import BaseLLM
+from .context_manager import ContextManager
+from .context_policy import ContextPolicy
 from .memory import ConversationMemory
 from .providers import (
     deepseek,  # noqa: F401
@@ -20,4 +22,6 @@ __all__ = [
     "ChatMessage",
     "ConversationMemory",
     "conversation_memory",
+    "ContextManager",
+    "ContextPolicy",
 ]
