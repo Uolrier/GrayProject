@@ -5,12 +5,14 @@ Provide common logic for all providers exposing an
 OpenAI-compatible API.
 """
 
-from typing import Iterator
+# from typing import Iterator
+from collections.abc import Generator
 
 from openai import OpenAI
 
 from ..base import BaseLLM
 from ..schema import ChatRequest, ChatResponse, TokenUsage
+from ..stream import StreamChunk
 
 
 class OpenAICompatibleLLM(BaseLLM):
@@ -118,7 +120,11 @@ class OpenAICompatibleLLM(BaseLLM):
 
         return response.choices[0].message.content
 
-    def stream(self, prompt: str, **kwargs) -> Iterator[str]:
+    def stream(
+        self,
+        prompt: str,
+        **kwargs,
+    ) -> Generator[StreamChunk, None, None]:
         client = self._get_client()
 
         response = client.chat.completions.create(
@@ -134,7 +140,17 @@ class OpenAICompatibleLLM(BaseLLM):
         )
 
         for chunk in response:
-            content = chunk.choices[0].delta.content
+            choice = chunk.choices[0]
+            content = choice.delta.content or ""
 
             if content:
-                yield content
+                yield StreamChunk(
+                    content=content,
+                )
+
+            if choice.finish_reason is not None:
+                yield StreamChunk(
+                    content="",
+                    finished=True,
+                    finish_reason=choice.finish_reason,
+                )

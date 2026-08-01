@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Iterator
+from collections.abc import Generator
 
 from .schema import ChatRequest, ChatResponse
+from .stream import StreamChunk
 
 
 class BaseLLM(ABC):
@@ -48,15 +49,20 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    def stream(self, prompt: str, **kwargs) -> Iterator[str]:
+    def stream(
+        self,
+        prompt: str,
+        **kwargs,
+    ) -> Generator[StreamChunk, None, None]:
         """
-        流式生成
+        流式生成。
 
         Args:
             prompt:
-                输入文本
+                输入文本。
 
         Yields:
-            文本片段
+            StreamChunk:
+                模型生成的流式输出片段。
         """
         pass
