@@ -25,6 +25,16 @@ GrayProject
 │   │   │   │   ├── loader.py
 │   │   │   │   ├── manager.py
 │   │   │   │   └── template.py
+│   │   │   ├── tokenizers
+│   │   │   │   ├── providers
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── huggingface_tokenizer.py
+│   │   │   │   │   └── openai_tokenizer.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py
+│   │   │   │   ├── factory.py
+│   │   │   │   ├── manager.py
+│   │   │   │   └── registry.py
 │   │   │   └── __init__.py
 │   │   ├── api
 │   │   │   ├── __init__.py
@@ -97,6 +107,7 @@ GrayProject
 │   ├── README.md
 │   ├── settings.py
 │   ├── system.yaml
+│   ├── tokenizer.yaml
 │   └── vectordb.yaml
 ├── data
 │   └── .gitkeep
@@ -175,6 +186,11 @@ GrayProject
 │   │   │   ├── prompts
 │   │   │   │   ├── __init__.py
 │   │   │   │   └── test_prompt.py
+│   │   │   ├── tokenizers
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── test_factory.py
+│   │   │   │   ├── test_huggingface_tokenizer.py
+│   │   │   │   └── test_manager.py
 │   │   │   └── __init__.py
 │   │   ├── llm
 │   │   │   ├── __init__.py
@@ -204,6 +220,7 @@ GrayProject
 ├── CONTRIBUTING.md
 ├── DEVELOPMENT.md
 ├── LICENSE
+├── project_tree.txt
 ├── pyproject.toml
 ├── README.md
 ├── requirements.txt
