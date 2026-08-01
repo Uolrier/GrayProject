@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 from backend.app.core.exceptions import GrayException
 from backend.app.core.logger import logger
-from backend.app.routers import system
+from backend.app.routers import chat, system
 
 app = FastAPI(
     title="GrayProject API",
@@ -35,6 +35,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(system.router)
+app.include_router(chat.router)
 
 
 @app.get("/")
