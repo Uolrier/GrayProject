@@ -3,8 +3,10 @@
 from sentence_transformers import SentenceTransformer
 
 from ..base import BaseEmbedding
+from ..registry import register_embedding
 
 
+@register_embedding("bge")
 class BGEEmbedding(BaseEmbedding):
     """
     BGE 本地 Embedding Provider

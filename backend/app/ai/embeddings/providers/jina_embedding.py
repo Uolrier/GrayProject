@@ -3,8 +3,10 @@
 from sentence_transformers import SentenceTransformer
 
 from ..base import BaseEmbedding
+from ..registry import register_embedding
 
 
+@register_embedding("jina")
 class JinaEmbedding(BaseEmbedding):
     """
     Jina 本地 Embedding Provider

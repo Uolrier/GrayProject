@@ -4,10 +4,13 @@ OpenAI Embedding provider.
 
 from openai import OpenAI
 
-from backend.app.ai.embeddings.base import BaseEmbedding
 from config.settings import settings
 
+from ..base import BaseEmbedding
+from ..registry import register_embedding
 
+
+@register_embedding("openai")
 class OpenAIEmbedding(BaseEmbedding):
     """
     OpenAI embedding implementation.
