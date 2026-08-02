@@ -2,6 +2,7 @@ from backend.app.runtime.registry import get_runtime
 from config.settings import load_model_config
 
 from .base import BaseLLM
+from .config import ProviderConfig
 from .registry import get_provider
 
 
@@ -15,8 +16,20 @@ class LLMFactory:
         """
         Create an LLM instance by provider name.
         """
+
         llm_class = get_provider(provider)
-        return llm_class(**kwargs)
+
+        config = ProviderConfig.get(provider)
+
+        try:
+            return llm_class(
+                config=config,
+                **kwargs,
+            )
+        except TypeError:
+            return llm_class(
+                **kwargs,
+            )
 
 
 class ModelManager:
@@ -30,15 +43,29 @@ class ModelManager:
     @staticmethod
     def create(name: str, **kwargs):
         """Create model instance by name."""
+
         try:
             model_cls = get_provider(name)
-            return model_cls(**kwargs)
+
+            config = ProviderConfig.get(name)
+
+            try:
+                return model_cls(
+                    config=config,
+                    **kwargs,
+                )
+            except TypeError:
+                return model_cls(
+                    **kwargs,
+                )
+
         except ValueError:
             pass
 
         try:
             model_cls = get_runtime(name)
             return model_cls(**kwargs)
+
         except ValueError:
             pass
 
@@ -47,6 +74,12 @@ class ModelManager:
     @staticmethod
     def create_active(**kwargs):
         """Create active model from config."""
+
         config = load_model_config()
+
         model_name = config["active_model"]
-        return ModelManager.create(model_name, **kwargs)
+
+        return ModelManager.create(
+            model_name,
+            **kwargs,
+        )

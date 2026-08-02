@@ -1,0 +1,30 @@
+providers:
+
+  deepseek:
+    type: openai_compatible
+
+    enabled: true
+
+    api_key_env:
+      - DEEPSEEK_API_KEY
+
+    base_url:
+      https://api.deepseek.com
+
+    model:
+      deepseek-chat
+
+
+  openai:
+    type: openai
+
+    enabled: true
+
+    api_key_env:
+      - OPENAI_API_KEY
+
+    base_url:
+      https://api.openai.com/v1
+
+    model:
+      gpt-4o
