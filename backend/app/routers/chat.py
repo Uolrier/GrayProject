@@ -9,6 +9,7 @@ from backend.app.api.stream import (
     encode_error,
     encode_init,
 )
+from backend.app.core.exceptions import GrayException
 from backend.app.llm.factory import ModelManager
 from backend.app.llm.generation import generation_manager
 
@@ -49,10 +50,10 @@ async def chat_stream(request: Request):
     task_id = str(uuid.uuid4())
     generation_manager.create(task_id)
 
-    llm = ModelManager.create_active()
-
     def generator():
         try:
+            llm = ModelManager.create_active()
+
             yield encode_init(task_id)
 
             for chunk in llm.stream(prompt):
@@ -63,8 +64,17 @@ async def chat_stream(request: Request):
 
             yield encode_done()
 
-        except Exception as exc:
-            yield encode_error(str(exc))
+        except GrayException as exc:
+            yield encode_error(
+                exc.message,
+                exc.code,
+            )
+
+        except Exception:
+            yield encode_error(
+                "Internal server error",
+                "INTERNAL_ERROR",
+            )
 
         finally:
             generation_manager.remove(task_id)

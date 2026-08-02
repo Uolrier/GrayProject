@@ -44,19 +44,38 @@ def index():
 
 
 @app.exception_handler(GrayException)
-async def gray_exception_handler(request: Request, exc: GrayException):
-    logger.error(f"API Error: {exc.code} - {exc.message}")
+async def gray_exception_handler(
+    request: Request,
+    exc: GrayException,
+):
+    logger.error(f"Gray Error: {exc.code} - {exc.message}")
 
     return JSONResponse(
-        status_code=400, content={"code": exc.code, "message": exc.message}
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "error": {
+                "code": exc.code,
+                "message": exc.message,
+            },
+        },
     )
 
 
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def global_exception_handler(
+    request: Request,
+    exc: Exception,
+):
     logger.exception(f"Unhandled Exception: {request.url}")
 
     return JSONResponse(
         status_code=500,
-        content={"code": "INTERNAL_ERROR", "message": "Internal server error"},
+        content={
+            "success": False,
+            "error": {
+                "code": "INTERNAL_ERROR",
+                "message": "Internal server error",
+            },
+        },
     )

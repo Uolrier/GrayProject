@@ -39,12 +39,23 @@ def encode_done() -> str:
     return "data: [DONE]\n\n"
 
 
-def encode_error(message: str) -> str:
+def encode_error(
+    message: str,
+    code: str = "INTERNAL_ERROR",
+) -> str:
     """
     Encode SSE error event.
+
+    Args:
+        message:
+            Error message.
+
+        code:
+            Error code.
     """
 
     payload = {
+        "code": code,
         "message": message,
     }
 
