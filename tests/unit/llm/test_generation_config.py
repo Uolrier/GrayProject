@@ -9,7 +9,7 @@ def test_default_generation_config():
     config = GenerationConfig()
 
     assert config.temperature == 0.7
-    assert config.max_tokens == 2048
+    assert config.max_tokens is None
 
 
 def test_custom_temperature():

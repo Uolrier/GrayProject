@@ -10,11 +10,16 @@ class GenerationConfig:
 
     temperature: float = 0.7
 
-    max_tokens: Optional[int] = 2048
+    max_tokens: Optional[int] = None
 
     top_p: Optional[float] = None
 
     stop: Optional[list[str]] = None
+
+    def validate(self):
+        if self.max_tokens is not None:
+            if self.max_tokens <= 0:
+                raise ValueError("max_tokens must be positive")
 
 
 if TYPE_CHECKING:
