@@ -139,6 +139,23 @@ class LLMRetryExhaustedError(LLMException):
         )
 
 
+class RateLimitExceeded(GrayException):
+    """
+    Raised when request rate exceeds the configured limit.
+    """
+
+    status_code = 429
+
+    def __init__(
+        self,
+        message: str = "Too many requests",
+    ):
+        super().__init__(
+            code="RATE_LIMIT_EXCEEDED",
+            message=message,
+        )
+
+
 class RuntimeException(GrayException):
     """
     Local model runtime errors.

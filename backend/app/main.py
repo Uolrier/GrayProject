@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from backend.app.core.exceptions import GrayException
 from backend.app.core.logger import logger
+from backend.app.core.rate_limit import RateLimiter
 from backend.app.routers import chat, system
 
 app = FastAPI(
@@ -22,6 +23,11 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+limiter = RateLimiter(
+    capacity=60,
+    refill_rate=1,
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -31,6 +37,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def rate_limit_middleware(
+    request: Request,
+    call_next,
+):
+    limiter.check()
+
+    return await call_next(request)
 
 
 # 注册路由
