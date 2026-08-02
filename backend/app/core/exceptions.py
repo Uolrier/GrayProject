@@ -109,6 +109,36 @@ class GenerationError(LLMException):
         )
 
 
+class LLMTimeoutError(LLMException):
+    """
+    LLM request timeout.
+    """
+
+    def __init__(
+        self,
+        message: str = "LLM request timeout",
+    ):
+        super().__init__(
+            code="LLM_TIMEOUT_ERROR",
+            message=message,
+        )
+
+
+class LLMRetryExhaustedError(LLMException):
+    """
+    LLM retry attempts exhausted.
+    """
+
+    def __init__(
+        self,
+        message: str = "LLM retry attempts exhausted",
+    ):
+        super().__init__(
+            code="LLM_RETRY_EXHAUSTED",
+            message=message,
+        )
+
+
 class RuntimeException(GrayException):
     """
     Local model runtime errors.

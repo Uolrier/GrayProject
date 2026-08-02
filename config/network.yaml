@@ -1,0 +1,8 @@
+timeout:
+  connect: 5
+  read: 60
+  total: 65
+
+retry:
+  max_attempts: 3
+  backoff_factor: 1

@@ -189,6 +189,8 @@ class Settings:
 
     TOKENIZER_CONFIG_PATH = BASE_DIR / "config" / "tokenizer.yaml"
 
+    NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
+
 
 # ==========================
 # 单例配置对象
@@ -202,6 +204,21 @@ settings = Settings()
 # ==========================
 
 MODEL_CONFIG_PATH = BASE_DIR / "config" / "models.yaml"
+
+NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
+
+
+def load_network_config():
+    """
+    Load network timeout and retry configuration.
+    """
+
+    with open(
+        NETWORK_CONFIG_PATH,
+        "r",
+        encoding="utf-8",
+    ) as f:
+        return yaml.safe_load(f)
 
 
 def load_model_config():

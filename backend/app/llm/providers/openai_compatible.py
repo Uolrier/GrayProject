@@ -8,8 +8,14 @@ OpenAI-compatible API.
 # from typing import Iterator
 from collections.abc import Generator
 
-from openai import OpenAI
+from openai import APITimeoutError, OpenAI
 
+from ...core.exceptions import LLMTimeoutError
+from ...core.retry import retry
+from ...core.timeout import (
+    get_retry_config,
+    get_timeout_config,
+)
 from ..base import BaseLLM
 from ..generation_config import (
     build_generation_config,
@@ -46,9 +52,12 @@ class OpenAICompatibleLLM(BaseLLM):
         """
 
         if self.client is None:
+            timeout_config = get_timeout_config()
+
             self.client = OpenAI(
                 api_key=self.api_key,
                 base_url=self.base_url,
+                timeout=timeout_config.total,
             )
 
         return self.client
@@ -88,12 +97,25 @@ class OpenAICompatibleLLM(BaseLLM):
 
         generation_kwargs = generation_config_to_kwargs(generation_config)
 
-        response = client.chat.completions.create(
-            model=self.model_name,
-            messages=messages,
-            stream=False,
-            **generation_kwargs,
+        retry_config = get_retry_config()
+
+        @retry(
+            max_attempts=retry_config.max_attempts,
+            backoff_factor=retry_config.backoff_factor,
         )
+        def create_completion():
+            return client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                stream=False,
+                **generation_kwargs,
+            )
+
+        try:
+            response = create_completion()
+
+        except APITimeoutError as exc:
+            raise LLMTimeoutError() from exc
 
         usage = None
 
@@ -114,16 +136,29 @@ class OpenAICompatibleLLM(BaseLLM):
     def generate(self, prompt: str, **kwargs) -> str:
         client = self._get_client()
 
-        response = client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
-            ],
-            **kwargs,
+        retry_config = get_retry_config()
+
+        @retry(
+            max_attempts=retry_config.max_attempts,
+            backoff_factor=retry_config.backoff_factor,
         )
+        def create_completion():
+            return client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    }
+                ],
+                **kwargs,
+            )
+
+        try:
+            response = create_completion()
+
+        except APITimeoutError as exc:
+            raise LLMTimeoutError() from exc
 
         return response.choices[0].message.content
 
