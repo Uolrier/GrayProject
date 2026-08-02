@@ -11,6 +11,10 @@ from collections.abc import Generator
 from openai import OpenAI
 
 from ..base import BaseLLM
+from ..generation_config import (
+    build_generation_config,
+    generation_config_to_kwargs,
+)
 from ..schema import ChatRequest, ChatResponse, TokenUsage
 from ..stream import StreamChunk
 
@@ -80,12 +84,15 @@ class OpenAICompatibleLLM(BaseLLM):
             ]
         )
 
+        generation_config = build_generation_config(request)
+
+        generation_kwargs = generation_config_to_kwargs(generation_config)
+
         response = client.chat.completions.create(
             model=self.model_name,
             messages=messages,
-            temperature=request.temperature,
-            max_tokens=request.max_tokens,
             stream=False,
+            **generation_kwargs,
         )
 
         usage = None
