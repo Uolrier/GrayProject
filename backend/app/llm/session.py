@@ -55,3 +55,30 @@ class ChatSession:
         清空聊天记录。
         """
         self.messages.clear()
+
+    def last_message(self) -> ChatMessage | None:
+        """
+        获取最后一条消息。
+        """
+        if not self.messages:
+            return None
+
+        return self.messages[-1]
+
+    def remove_last_assistant(self) -> bool:
+        """
+        删除最后一条 Assistant 消息。
+
+        仅当当前会话最后一条消息为 assistant 时执行删除。
+
+        Returns:
+            bool: 删除成功返回 True，否则返回 False。
+        """
+        if not self.messages:
+            return False
+
+        if self.messages[-1].role != "assistant":
+            return False
+
+        self.messages.pop()
+        return True

@@ -58,3 +58,24 @@ def encode_error(message: str) -> str:
         )
         + "\n\n"
     )
+
+
+def encode_init(task_id: str) -> str:
+    """
+    Encode SSE initialization event.
+    """
+
+    payload = {
+        "task_id": task_id,
+    }
+
+    return (
+        "event: init\n"
+        "data: "
+        + json.dumps(
+            payload,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        + "\n\n"
+    )

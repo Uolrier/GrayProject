@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 
-import { streamChat } from "@/api/chat";
+import {
+    streamChat,
+    stopChat,
+} from "@/api/chat";
 
 
 export const useChatStore = defineStore(
@@ -9,10 +12,30 @@ export const useChatStore = defineStore(
         state: () => ({
             messages: [],
             loading: false,
+
+            currentTaskId: null,
         }),
 
-
         actions: {
+
+            async stopGeneration() {
+
+                if (!this.currentTaskId) {
+                    return;
+                }
+
+                try {
+
+                    await stopChat(
+                        this.currentTaskId
+                    );
+
+                } finally {
+
+                    this.currentTaskId = null;
+
+                }
+            },
 
             addMessage(
                 role,
@@ -71,6 +94,12 @@ export const useChatStore = defineStore(
                                 assistantIndex
                             ].content += token;
 
+                        },
+
+                        (taskId) => {
+
+                            this.currentTaskId = taskId;
+
                         }
                     );
 
@@ -89,6 +118,8 @@ export const useChatStore = defineStore(
                 } finally {
 
                     this.loading = false;
+
+                    this.currentTaskId = null;
 
                 }
             },

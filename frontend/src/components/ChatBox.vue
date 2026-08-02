@@ -3,12 +3,18 @@ import { ref } from "vue";
 
 import { useChatStore } from "@/stores/chat";
 
-
 const chatStore = useChatStore();
 
 
 const input = ref("");
 
+async function stop() {
+    try {
+        await chatStore.stopGeneration();
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 function send() {
 
@@ -66,17 +72,23 @@ function send() {
         <input
             v-model="input"
             @keyup.enter="send"
+            :disabled="chatStore.loading"
             placeholder="输入消息..."
         />
 
 
         <button
+            v-if="!chatStore.loading"
             @click="send"
-            :disabled="chatStore.loading"
         >
-
             发送
+        </button>
 
+        <button
+            v-else
+            @click="stop"
+        >
+            停止
         </button>
 
 
@@ -97,7 +109,11 @@ function send() {
 
     flex-direction:column;
 
-    height:100%;
+    height:90vh;
+
+    padding:20px;
+
+    box-sizing:border-box;
 
 }
 
@@ -107,6 +123,8 @@ function send() {
     flex:1;
 
     overflow-y:auto;
+
+    min-height:0;
 
 }
 
@@ -139,6 +157,8 @@ function send() {
 
     gap:8px;
 
+    padding-top:12px;
+
 }
 
 
@@ -146,7 +166,21 @@ function send() {
 
     flex:1;
 
+    height:40px;
+
+    padding:0 12px;
+
+    font-size:16px;
+
 }
 
+.input-area button {
+
+    height:40px;
+
+    padding:0 20px;
+
+}
 
 </style>
+
