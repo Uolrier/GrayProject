@@ -30,6 +30,7 @@ def build_generation_config(
 
     return GenerationConfig(
         temperature=request.temperature,
+        top_p=request.top_p,
         max_tokens=request.max_tokens,
     )
 

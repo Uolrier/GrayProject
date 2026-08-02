@@ -26,6 +26,8 @@ class ChatRequest:
 
     model: Optional[str] = None
 
+    top_p: Optional[float] = None
+
     temperature: float = 0.7
 
     max_tokens: Optional[int] = None
