@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -44,7 +46,8 @@ async def rate_limit_middleware(
     request: Request,
     call_next,
 ):
-    limiter.check()
+    if os.getenv("TESTING") != "true":
+        limiter.check()
 
     return await call_next(request)
 
@@ -57,6 +60,11 @@ app.include_router(chat.router)
 @app.get("/")
 def index():
     return {"project": "GrayProject", "status": "backend running"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 @app.exception_handler(GrayException)
