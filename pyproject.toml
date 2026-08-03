@@ -18,6 +18,7 @@ ignore = []
 [tool.pytest.ini_options]
 pythonpath = [
     ".",
+    "backend",
 ]
 markers = [
     "integration: integration tests"
