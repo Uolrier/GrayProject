@@ -19,3 +19,6 @@ ignore = []
 pythonpath = [
     ".",
 ]
+markers = [
+    "integration: integration tests"
+]
