@@ -3,6 +3,7 @@ from typing import List
 
 from ..base import BaseDocumentLoader
 from ..factory import LoaderFactory
+from ..readme import is_readme
 from ..schema import Document
 
 
@@ -31,7 +32,7 @@ class MarkdownLoader(BaseDocumentLoader):
                 page_content=content,
                 metadata={
                     "source": str(self.path),
-                    "type": "markdown",
+                    "type": "readme" if is_readme(self.path.name) else "markdown",
                 },
             )
         ]
