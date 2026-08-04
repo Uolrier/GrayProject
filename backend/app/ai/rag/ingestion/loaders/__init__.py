@@ -1,4 +1,5 @@
 from .cpp import CppLoader
+from .git import GitLoader
 from .html import HTMLLoader
 from .java import JavaLoader
 from .javascript import JavaScriptLoader
@@ -20,4 +21,5 @@ __all__ = [
     "CppLoader",
     "JavaLoader",
     "JavaScriptLoader",
+    "GitLoader",
 ]
