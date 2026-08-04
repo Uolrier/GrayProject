@@ -1,5 +1,6 @@
 from .cpp import CppLoader
 from .html import HTMLLoader
+from .java import JavaLoader
 from .json import JSONDocumentLoader
 from .markdown import MarkdownLoader
 from .pdf import PDFLoader
@@ -16,4 +17,5 @@ __all__ = [
     "JSONDocumentLoader",
     "PythonLoader",
     "CppLoader",
+    "JavaLoader",
 ]
