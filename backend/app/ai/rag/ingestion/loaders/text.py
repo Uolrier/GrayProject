@@ -18,4 +18,12 @@ class TextLoader(BaseDocumentLoader):
         with open(self.path, "r", encoding="utf-8") as file:
             content = file.read()
 
-        return [Document(page_content=content, metadata={"source": self.path})]
+        return [
+            Document(
+                page_content=content,
+                metadata={
+                    "source": self.path,
+                    "type": "txt",
+                },
+            )
+        ]
