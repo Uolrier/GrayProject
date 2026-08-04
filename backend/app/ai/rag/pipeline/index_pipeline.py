@@ -1,7 +1,7 @@
 from typing import List
 
 from .base import BasePipeline
-from .chunker import TextChunker
+from .chunker import FixedLengthChunker
 from .schema import DocumentChunk
 
 
@@ -32,7 +32,7 @@ class IndexPipeline(BasePipeline):
         self.embedding = embedding
         self.vector_store = vector_store
 
-        self.chunker = chunker if chunker else TextChunker()
+        self.chunker = chunker if chunker else FixedLengthChunker()
 
     def create_chunks(
         self,

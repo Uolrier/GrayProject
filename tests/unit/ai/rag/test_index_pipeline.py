@@ -1,12 +1,12 @@
 from backend.app.ai.rag.pipeline import (
     DocumentChunk,
+    FixedLengthChunker,
     IndexPipeline,
-    TextChunker,
 )
 
 
-def test_text_chunker():
-    chunker = TextChunker(
+def test_fixed_length_chunker():
+    chunker = FixedLengthChunker(
         chunk_size=5,
         overlap=1,
     )

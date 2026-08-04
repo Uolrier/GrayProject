@@ -15,3 +15,17 @@ class DocumentChunk:
     text: str
 
     metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Chunk:
+    """
+    A chunk generated from a document.
+
+    Attributes:
+        content: Chunk text content.
+        metadata: Additional information about this chunk.
+    """
+
+    content: str
+    metadata: Dict[str, Any] = field(default_factory=dict)
