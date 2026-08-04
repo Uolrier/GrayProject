@@ -161,7 +161,7 @@
 | Phase1_Step05 | OpenAI 接入                   |
 | Phase1_Step06 | DeepSeek API 接入             |
 | Phase1_Step07 | OpenAI Compatible 接口统一      |
-| Phase1_Step08 | 本地 Ollama 接入                |
+| Phase1_Step08 | Local Inference Runtime 抽象|
 | Phase1_Step09 | HuggingFace Transformers 接入 |
 | Phase1_Step10 | 模型切换机制                      |
 
@@ -314,8 +314,8 @@ Phase 1 的职责只有一个：
 | Phase2_Step06 | Markdown Loader   |
 | Phase2_Step07 | PDF Loader        |
 | Phase2_Step08 | Word Loader       |
-| Phase2_Step09 | Excel Loader      |
-| Phase2_Step10 | PowerPoint Loader |
+| Phase2_Step09 | Excel Loader      | (跳过)
+| Phase2_Step10 | PowerPoint Loader |（跳过）
 | Phase2_Step11 | HTML Loader       |
 | Phase2_Step12 | JSON Loader       |
 
