@@ -1,6 +1,8 @@
 from .html import HTMLLoader
+from .json import JSONDocumentLoader
 from .markdown import MarkdownLoader
 from .pdf import PDFLoader
+from .python import PythonLoader
 from .text import TextLoader
 from .word import WordLoader
 
@@ -10,4 +12,6 @@ __all__ = [
     "PDFLoader",
     "HTMLLoader",
     "WordLoader",
+    "JSONDocumentLoader",
+    "PythonLoader",
 ]
