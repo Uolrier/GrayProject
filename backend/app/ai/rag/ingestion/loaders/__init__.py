@@ -1,3 +1,4 @@
+from .cpp import CppLoader
 from .html import HTMLLoader
 from .json import JSONDocumentLoader
 from .markdown import MarkdownLoader
@@ -14,4 +15,5 @@ __all__ = [
     "WordLoader",
     "JSONDocumentLoader",
     "PythonLoader",
+    "CppLoader",
 ]
