@@ -1,5 +1,9 @@
 from .base import BasePipeline
-from .chunker import BaseChunker, FixedLengthChunker
+from .chunker import (
+    BaseChunker,
+    FixedLengthChunker,
+    OverlapChunker,
+)
 from .index_pipeline import IndexPipeline
 from .schema import Chunk, DocumentChunk
 
@@ -10,4 +14,5 @@ __all__ = [
     "Chunk",
     "BaseChunker",
     "FixedLengthChunker",
+    "OverlapChunker",
 ]

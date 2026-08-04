@@ -1,12 +1,12 @@
 from backend.app.ai.rag.pipeline import (
     DocumentChunk,
-    FixedLengthChunker,
     IndexPipeline,
+    OverlapChunker,
 )
 
 
-def test_fixed_length_chunker():
-    chunker = FixedLengthChunker(
+def test_overlap_chunker():
+    chunker = OverlapChunker(
         chunk_size=5,
         overlap=1,
     )

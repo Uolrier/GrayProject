@@ -1,4 +1,7 @@
-from backend.app.ai.rag.pipeline.chunker import FixedLengthChunker
+from backend.app.ai.rag.pipeline.chunker import (
+    FixedLengthChunker,
+    OverlapChunker,
+)
 
 
 def test_fixed_length_chunker_basic():
@@ -6,7 +9,6 @@ def test_fixed_length_chunker_basic():
 
     chunker = FixedLengthChunker(
         chunk_size=500,
-        overlap=50,
     )
 
     chunks = chunker.split(text)
@@ -16,13 +18,13 @@ def test_fixed_length_chunker_basic():
     assert chunks[0].metadata["start"] == 0
     assert chunks[0].metadata["end"] == 500
 
-    assert chunks[1].metadata["start"] == 450
+    assert chunks[1].metadata["start"] == 500
 
 
-def test_fixed_length_chunker_overlap():
+def test_overlap_chunker_basic():
     text = "0123456789ABCDEFGHIJ"
 
-    chunker = FixedLengthChunker(
+    chunker = OverlapChunker(
         chunk_size=10,
         overlap=2,
     )
@@ -34,9 +36,38 @@ def test_fixed_length_chunker_overlap():
     assert chunks[2].content == "GHIJ"
 
 
+def test_overlap_chunker_metadata():
+    text = "abcdefghij"
+
+    chunker = OverlapChunker(
+        chunk_size=6,
+        overlap=2,
+    )
+
+    chunks = chunker.split(text)
+
+    assert chunks[0].metadata["start"] == 0
+    assert chunks[0].metadata["end"] == 6
+
+    assert chunks[1].metadata["start"] == 4
+
+
 def test_invalid_chunk_size():
     try:
-        FixedLengthChunker(chunk_size=0)
+        FixedLengthChunker(
+            chunk_size=0,
+        )
+        assert False
+    except ValueError:
+        assert True
+
+
+def test_invalid_overlap():
+    try:
+        OverlapChunker(
+            chunk_size=10,
+            overlap=10,
+        )
         assert False
     except ValueError:
         assert True
