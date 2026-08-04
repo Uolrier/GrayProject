@@ -5,6 +5,7 @@ from .chunker import (
     OverlapChunker,
 )
 from .index_pipeline import IndexPipeline
+from .markdown_chunker import MarkdownChunker
 from .schema import Chunk, DocumentChunk
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "BaseChunker",
     "FixedLengthChunker",
     "OverlapChunker",
+    "MarkdownChunker",
 ]
