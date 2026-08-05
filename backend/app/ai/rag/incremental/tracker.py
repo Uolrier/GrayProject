@@ -68,6 +68,14 @@ class FileTracker:
                 indent=2,
             )
 
+    def reset(self):
+        """
+        Reset tracked snapshot.
+        """
+
+        if self.storage_path.exists():
+            self.storage_path.unlink()
+
     def detect_changes(
         self,
         current: dict[str, FileState],

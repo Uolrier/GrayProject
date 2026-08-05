@@ -30,6 +30,24 @@ class MetadataManager:
     def delete(self, document_id: str):
         return self._store.pop(document_id, None)
 
+    def clear_collection(
+        self,
+        collection: str,
+    ):
+        """
+        Remove all metadata belonging to a collection.
+        """
+
+        removed = []
+
+        for document_id, metadata in list(self._store.items()):
+            if metadata.collection == collection:
+                removed.append(document_id)
+
+                del self._store[document_id]
+
+        return removed
+
     def all(self):
         return list(self._store.values())
 
