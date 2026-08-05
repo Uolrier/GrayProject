@@ -1,5 +1,6 @@
 from typing import List
 
+from .batch import batch_split
 from .schema import DocumentChunk, EmbeddedChunk
 
 
@@ -14,22 +15,30 @@ class EmbeddingPipeline:
     def run(
         self,
         chunks: List[DocumentChunk],
+        batch_size: int = 32,
     ) -> List[EmbeddedChunk]:
-        texts = [chunk.text for chunk in chunks]
-
-        vectors = self.embedding.embed(texts)
-
         embedded_chunks = []
 
-        for chunk, vector in zip(chunks, vectors):
-            embedded_chunks.append(
-                EmbeddedChunk(
-                    id=chunk.id,
-                    document_id=chunk.document_id,
-                    text=chunk.text,
-                    embedding=vector,
-                    metadata=chunk.metadata,
+        for batch in batch_split(
+            chunks,
+            batch_size,
+        ):
+            texts = [chunk.text for chunk in batch]
+
+            vectors = self.embedding.embed_documents(texts)
+
+            for chunk, vector in zip(
+                batch,
+                vectors,
+            ):
+                embedded_chunks.append(
+                    EmbeddedChunk(
+                        id=chunk.id,
+                        document_id=chunk.document_id,
+                        text=chunk.text,
+                        embedding=vector,
+                        metadata=chunk.metadata,
+                    )
                 )
-            )
 
         return embedded_chunks

@@ -11,7 +11,7 @@ class FakeEmbedding:
     Fake embedding provider for testing.
     """
 
-    def embed(self, texts):
+    def embed_documents(self, texts):
         return [[0.1, 0.2, 0.3] for _ in texts]
 
 
