@@ -74,3 +74,33 @@ class IndexPipeline(BasePipeline):
             "documents": len(documents),
             "chunks": len(chunks),
         }
+
+    def add_document(self, document):
+        """
+        Add single document.
+        """
+
+        return self.run([document])
+
+    def update_document(self, document):
+        """
+        Update existing document.
+
+        Current implementation:
+        remove old index then add again.
+        """
+
+        if self.vector_store:
+            self.vector_store.delete(document.id)
+
+        return self.run([document])
+
+    def delete_document(self, document_id: str):
+        """
+        Delete document from vector store.
+        """
+
+        if self.vector_store:
+            self.vector_store.delete(document_id)
+
+        return {"deleted": document_id}
