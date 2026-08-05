@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from ..config import ChunkConfig
 from .schema import Chunk
 
 
@@ -27,8 +28,15 @@ class FixedLengthChunker(BaseChunker):
 
     def __init__(
         self,
-        chunk_size: int = 500,
+        chunk_size: int | None = None,
+        config: ChunkConfig | None = None,
     ):
+        if config:
+            chunk_size = config.fixed_chunk_size
+
+        if chunk_size is None:
+            chunk_size = 500
+
         if chunk_size <= 0:
             raise ValueError("chunk_size must be greater than zero")
 
@@ -86,9 +94,20 @@ class OverlapChunker(BaseChunker):
 
     def __init__(
         self,
-        chunk_size: int = 500,
-        overlap: int = 50,
+        chunk_size: int | None = None,
+        overlap: int | None = None,
+        config: ChunkConfig | None = None,
     ):
+        if config:
+            chunk_size = config.overlap_chunk_size
+            overlap = config.overlap
+
+        if chunk_size is None:
+            chunk_size = 500
+
+        if overlap is None:
+            overlap = 50
+
         if chunk_size <= 0:
             raise ValueError("chunk_size must be greater than zero")
 

@@ -1,5 +1,6 @@
 import re
 
+from ..config import ChunkConfig
 from .chunker import BaseChunker
 from .schema import Chunk
 
@@ -20,7 +21,12 @@ class SemanticChunker(BaseChunker):
         self,
         similarity_threshold: float = 0.3,
         max_chunk_size: int = 500,
+        config: ChunkConfig | None = None,
     ):
+        if config:
+            similarity_threshold = config.semantic_similarity_threshold
+
+            max_chunk_size = config.semantic_max_chunk_size
         if not 0 <= similarity_threshold <= 1:
             raise ValueError("similarity_threshold must be between 0 and 1")
 

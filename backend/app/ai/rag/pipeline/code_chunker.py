@@ -1,5 +1,6 @@
 import re
 
+from ..config import ChunkConfig
 from .chunker import BaseChunker, FixedLengthChunker
 from .schema import Chunk
 
@@ -23,7 +24,10 @@ class CodeChunker(BaseChunker):
         self,
         language: str,
         chunk_size: int = 500,
+        config: ChunkConfig | None = None,
     ):
+        if config:
+            chunk_size = config.code_chunk_size
         self.language = language.lower()
 
         self.fallback_chunker = FixedLengthChunker(
