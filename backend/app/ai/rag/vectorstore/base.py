@@ -17,3 +17,19 @@ class BaseVectorStore(ABC):
     @abstractmethod
     def count(self):
         pass
+
+    @abstractmethod
+    def create_collection(self, name: str):
+        pass
+
+    @abstractmethod
+    def delete_collection(self, name: str):
+        pass
+
+    @abstractmethod
+    def list_collections(self):
+        pass
+
+    @abstractmethod
+    def use_collection(self, name: str):
+        pass

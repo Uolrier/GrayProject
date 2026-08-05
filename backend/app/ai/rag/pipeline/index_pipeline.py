@@ -2,7 +2,10 @@ from typing import List
 
 from .base import BasePipeline
 from .chunker import FixedLengthChunker
-from .schema import DocumentChunk
+from .schema import (
+    DocumentChunk,
+    EmbeddedChunk,
+)
 
 
 class IndexPipeline(BasePipeline):
@@ -28,11 +31,24 @@ class IndexPipeline(BasePipeline):
         embedding=None,
         vector_store=None,
         chunker=None,
+        collection_name="grayproject",
     ):
         self.embedding = embedding
+
         self.vector_store = vector_store
 
+        self.collection_name = collection_name
+
         self.chunker = chunker if chunker else FixedLengthChunker()
+        if self.vector_store:
+            self._ensure_collection()
+
+    def _ensure_collection(self):
+        if hasattr(self.vector_store, "create_collection"):
+            self.vector_store.create_collection(self.collection_name)
+
+        if hasattr(self.vector_store, "use_collection"):
+            self.vector_store.use_collection(self.collection_name)
 
     def create_chunks(
         self,
@@ -43,13 +59,16 @@ class IndexPipeline(BasePipeline):
         for doc in documents:
             texts = self.chunker.split(doc.content)
 
-            for index, text in enumerate(texts):
+            for index, chunk in enumerate(texts):
                 chunks.append(
                     DocumentChunk(
                         id=f"{doc.id}_{index}",
                         document_id=doc.id,
-                        text=text,
-                        metadata=doc.metadata,
+                        text=chunk.content,
+                        metadata={
+                            **doc.metadata,
+                            **chunk.metadata,
+                        },
                     )
                 )
 
@@ -65,10 +84,20 @@ class IndexPipeline(BasePipeline):
             vectors = None
 
         if self.vector_store:
-            self.vector_store.add(
-                chunks,
-                vectors,
-            )
+            records = []
+
+            for chunk, vector in zip(chunks, vectors or []):
+                records.append(
+                    EmbeddedChunk(
+                        id=chunk.id,
+                        document_id=chunk.document_id,
+                        text=chunk.text,
+                        embedding=vector,
+                        metadata=chunk.metadata,
+                    )
+                )
+
+            self.vector_store.add(records)
 
         return {
             "documents": len(documents),
