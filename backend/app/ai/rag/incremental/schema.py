@@ -39,6 +39,8 @@ class FileChange:
 
     change_type: ChangeType
 
+    document_id: str | None = None
+
     previous: FileState | None = None
 
     current: FileState | None = None

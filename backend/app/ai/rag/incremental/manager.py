@@ -18,7 +18,9 @@ class IncrementalManager:
         scanner: FileScanner,
         tracker: FileTracker,
         document_loader: Callable | None = None,
+        index_updater=None,
         pipeline=None,
+        metadata_manager=None,
     ):
         self.scanner = scanner
 
@@ -26,7 +28,24 @@ class IncrementalManager:
 
         self.document_loader = document_loader
 
-        self.pipeline = pipeline
+        self.metadata_manager = metadata_manager
+
+        # Step32 compatibility
+        if index_updater is not None:
+            self.index_updater = index_updater
+
+        elif pipeline is not None:
+            from ..index_update import IndexUpdateManager
+
+            self.index_updater = IndexUpdateManager(
+                index_pipeline=pipeline,
+                metadata_manager=metadata_manager,
+            )
+
+        else:
+            self.index_updater = None
+
+        self.metadata_manager = metadata_manager
 
     def update(
         self,
@@ -39,7 +58,7 @@ class IncrementalManager:
 
         changes = self.tracker.detect_changes(current_snapshot)
 
-        if self.pipeline and self.document_loader:
+        if self.index_updater and self.document_loader:
             self._apply_changes(changes)
 
         self.tracker.save(current_snapshot)
@@ -51,7 +70,7 @@ class IncrementalManager:
         changes: list[FileChange],
     ):
         """
-        Apply changes to index pipeline.
+        Apply changes through IndexUpdateManager.
         """
 
         for change in changes:
@@ -59,16 +78,27 @@ class IncrementalManager:
                 documents = self.document_loader(self._resolve_path(change.path))
 
                 for document in documents:
-                    self.pipeline.add_document(document)
+                    self.index_updater.add(document)
 
             elif change.change_type == ChangeType.UPDATED:
                 documents = self.document_loader(self._resolve_path(change.path))
 
                 for document in documents:
-                    self.pipeline.update_document(document)
+                    self.index_updater.update(document)
 
             elif change.change_type == ChangeType.DELETED:
-                self.pipeline.delete_document(self._resolve_path(change.path))
+                document_id = change.document_id
+
+                if document_id is None and self.metadata_manager:
+                    metadata = self.metadata_manager.find_by_source(
+                        self._resolve_path(change.path)
+                    )
+
+                    if metadata:
+                        document_id = metadata.document_id
+
+                if document_id:
+                    self.index_updater.delete(document_id)
 
     def _resolve_path(
         self,

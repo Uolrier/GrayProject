@@ -1,0 +1,95 @@
+from .schema import IndexAction
+
+
+class IndexUpdateManager:
+    """
+    Manage incremental index update operations.
+    """
+
+    def __init__(
+        self,
+        index_pipeline=None,
+        metadata_manager=None,
+        vector_store=None,
+    ):
+        self.index_pipeline = index_pipeline
+
+        self.metadata_manager = metadata_manager
+
+        self.vector_store = vector_store
+
+    def execute(
+        self,
+        task,
+    ):
+        """
+        Execute index update task.
+        """
+
+        if task.action == IndexAction.ADD:
+            return self._add(task)
+
+        if task.action == IndexAction.UPDATE:
+            return self._update(task)
+
+        if task.action == IndexAction.DELETE:
+            return self._delete(task)
+
+        raise ValueError(f"Unsupported action: {task.action}")
+
+    def _add(
+        self,
+        task,
+    ):
+        if self.index_pipeline is None:
+            return None
+
+        return self.index_pipeline.run(task.path)
+
+    def add(
+        self,
+        document,
+    ):
+        if self.index_pipeline is None:
+            return None
+
+        return self.index_pipeline.add_document(document)
+
+    def _update(
+        self,
+        task,
+    ):
+        if self.vector_store is not None:
+            self.vector_store.delete(ids=[task.document_id])
+
+        return self._add(task)
+
+    def update(
+        self,
+        document,
+    ):
+        if self.index_pipeline is None:
+            return None
+
+        return self.index_pipeline.update_document(document)
+
+    def _delete(
+        self,
+        task,
+    ):
+        if self.vector_store is not None:
+            self.vector_store.delete(ids=[task.document_id])
+
+        if self.metadata_manager is not None:
+            self.metadata_manager.delete(task.document_id)
+
+        return True
+
+    def delete(
+        self,
+        document_id,
+    ):
+        if self.index_pipeline is None:
+            return None
+
+        return self.index_pipeline.delete_document(document_id)

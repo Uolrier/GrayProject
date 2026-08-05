@@ -32,3 +32,17 @@ class MetadataManager:
 
     def all(self):
         return list(self._store.values())
+
+    def find_by_source(
+        self,
+        source: str,
+    ):
+        """
+        Find metadata by document source path.
+        """
+
+        for metadata in self._store.values():
+            if metadata.source == source:
+                return metadata
+
+        return None
