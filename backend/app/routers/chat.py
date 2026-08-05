@@ -12,6 +12,12 @@ from backend.app.api.stream import (
 from backend.app.core.exceptions import GrayException
 from backend.app.llm.factory import ModelManager
 from backend.app.llm.generation import generation_manager
+from backend.app.llm.memory import (
+    conversation_memory,
+)
+from backend.app.llm.schema import (
+    ChatMessage,
+)
 
 router = APIRouter(
     prefix="/chat",
@@ -44,6 +50,11 @@ async def chat_stream(request: Request):
 
     prompt = body.get("message")
 
+    session_id = body.get(
+        "session_id",
+        "default",
+    )
+
     if not prompt:
         return {"error": "message is required"}
 
@@ -52,15 +63,39 @@ async def chat_stream(request: Request):
 
     def generator():
         try:
+            conversation_memory.add_message(
+                session_id,
+                ChatMessage(
+                    role="user",
+                    content=prompt,
+                ),
+            )
+
             llm = ModelManager.create_active()
 
             yield encode_init(task_id)
 
-            for chunk in llm.stream(prompt):
+            history = conversation_memory.get_history(session_id)
+
+            answer = ""
+
+            for chunk in llm.stream(
+                messages=history,
+            ):
                 if generation_manager.is_cancelled(task_id):
                     break
 
+                answer += chunk.content
+
                 yield encode_chunk(chunk)
+
+            conversation_memory.add_message(
+                session_id,
+                ChatMessage(
+                    role="assistant",
+                    content=answer,
+                ),
+            )
 
             yield encode_done()
 

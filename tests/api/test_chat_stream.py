@@ -9,14 +9,13 @@ client = TestClient(app)
 
 
 class MockLLM:
-    """
-    Mock streaming LLM.
-    """
-
-    def stream(self, prompt: str):
-        yield StreamChunk(
-            content="Hello",
-        )
+    def stream(
+        self,
+        prompt=None,
+        messages=None,
+        **kwargs,
+    ):
+        yield StreamChunk(content="Hello")
 
         yield StreamChunk(
             content=" World",

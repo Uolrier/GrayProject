@@ -164,19 +164,32 @@ class OpenAICompatibleLLM(BaseLLM):
 
     def stream(
         self,
-        prompt: str,
+        prompt: str | None = None,
+        messages=None,
         **kwargs,
     ) -> Generator[StreamChunk, None, None]:
         client = self._get_client()
 
-        response = client.chat.completions.create(
-            model=self.model_name,
-            messages=[
+        if messages is None:
+            messages = [
                 {
                     "role": "user",
                     "content": prompt,
                 }
-            ],
+            ]
+
+        else:
+            messages = [
+                {
+                    "role": msg.role,
+                    "content": msg.content,
+                }
+                for msg in messages
+            ]
+
+        response = client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
             stream=True,
             **kwargs,
         )

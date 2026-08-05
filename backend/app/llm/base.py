@@ -51,7 +51,8 @@ class BaseLLM(ABC):
     @abstractmethod
     def stream(
         self,
-        prompt: str,
+        prompt: str | None = None,
+        messages=None,
         **kwargs,
     ) -> Generator[StreamChunk, None, None]:
         """
