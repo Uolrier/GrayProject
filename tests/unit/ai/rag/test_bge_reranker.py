@@ -1,14 +1,14 @@
 from unittest.mock import MagicMock, patch
 
-from app.ai.rag.reranking.providers.bge import BGEReranker
-from app.ai.rag.reranking.schema import (
+from backend.app.ai.rag.reranking.providers.bge import BGEReranker
+from backend.app.ai.rag.reranking.schema import (
     RerankDocument,
     RerankRequest,
 )
 
 
 def test_bge_reranker():
-    with patch("app.ai.rag.reranking.providers.bge.CrossEncoder") as mock:
+    with patch("app.ai.rag.reranking.providers.cross_encoder.CrossEncoder") as mock:
         model = MagicMock()
 
         model.predict.return_value = [
@@ -45,7 +45,7 @@ def test_bge_reranker():
 
 
 def test_bge_reranker_top_k():
-    with patch("app.ai.rag.reranking.providers.bge.CrossEncoder") as mock:
+    with patch("app.ai.rag.reranking.providers.cross_encoder.CrossEncoder") as mock:
         model = MagicMock()
 
         model.predict.return_value = [
