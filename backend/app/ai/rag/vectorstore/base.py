@@ -12,6 +12,12 @@ class BaseVectorStore(ABC):
 
     @abstractmethod
     def query(self, embedding, top_k=5):
+        """
+        Similarity search.
+
+        Returns results ordered by similarity score.
+        Higher score means more similar.
+        """
         pass
 
     @abstractmethod

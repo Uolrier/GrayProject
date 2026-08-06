@@ -65,11 +65,15 @@ class ChromaVectorStore(BaseVectorStore):
         output = []
 
         for i in range(len(result["ids"][0])):
+            distance = result["distances"][0][i]
+
+            score = 1 - distance
+
             output.append(
                 SearchResult(
                     id=result["ids"][0][i],
                     text=result["documents"][0][i],
-                    score=result["distances"][0][i],
+                    score=score,
                     metadata=result["metadatas"][0][i],
                 )
             )
