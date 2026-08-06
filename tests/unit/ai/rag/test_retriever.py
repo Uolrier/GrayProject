@@ -1,4 +1,4 @@
-from app.ai.rag.retrieval.vector_retriever import VectorRetriever
+from backend.app.ai.rag.retrieval.vector_retriever import VectorRetriever
 
 
 class DummyEmbedding:
@@ -12,7 +12,7 @@ class DummyVectorStore:
         embedding,
         top_k=5,
     ):
-        from app.ai.rag.vectorstore.schema import SearchResult
+        from backend.app.ai.rag.vectorstore.schema import SearchResult
 
         return [
             SearchResult(
