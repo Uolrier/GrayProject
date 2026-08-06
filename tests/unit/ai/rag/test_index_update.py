@@ -1,4 +1,4 @@
-from app.ai.rag.index_update import (
+from backend.app.ai.rag.index_update import (
     IndexAction,
     IndexUpdateManager,
     IndexUpdateTask,
@@ -8,10 +8,21 @@ from app.ai.rag.index_update import (
 class DummyPipeline:
     def __init__(self):
         self.called = False
+        self.documents = None
 
-    def run(self, path):
+    def run(self, documents):
         self.called = True
-        return path
+        self.documents = documents
+        return "indexed"
+
+
+class DummyLoaderAdapter:
+    def load(self, path):
+        return [
+            {
+                "path": path,
+            }
+        ]
 
 
 class DummyVectorStore:
@@ -33,7 +44,10 @@ class DummyMetadata:
 def test_add_index():
     pipeline = DummyPipeline()
 
-    manager = IndexUpdateManager(index_pipeline=pipeline)
+    manager = IndexUpdateManager(
+        index_pipeline=pipeline,
+        loader_adapter=DummyLoaderAdapter(),
+    )
 
     task = IndexUpdateTask(
         action=IndexAction.ADD,
@@ -44,7 +58,7 @@ def test_add_index():
 
     result = manager.execute(task)
 
-    assert result == "test.md"
+    assert result == "indexed"
     assert pipeline.called
 
 
@@ -56,6 +70,7 @@ def test_update_index():
     manager = IndexUpdateManager(
         index_pipeline=pipeline,
         vector_store=store,
+        loader_adapter=DummyLoaderAdapter(),
     )
 
     task = IndexUpdateTask(

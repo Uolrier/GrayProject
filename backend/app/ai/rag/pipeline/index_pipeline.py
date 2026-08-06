@@ -1,3 +1,4 @@
+import hashlib
 from typing import List
 
 from .base import BasePipeline
@@ -57,13 +58,15 @@ class IndexPipeline(BasePipeline):
         chunks = []
 
         for doc in documents:
-            texts = self.chunker.split(doc.content)
+            document_id = hashlib.sha1(doc.page_content.encode("utf-8")).hexdigest()
+
+            texts = self.chunker.split(doc.page_content)
 
             for index, chunk in enumerate(texts):
                 chunks.append(
                     DocumentChunk(
-                        id=f"{doc.id}_{index}",
-                        document_id=doc.id,
+                        id=f"{document_id}_{index}",
+                        document_id=document_id,
                         text=chunk.content,
                         metadata={
                             **doc.metadata,
@@ -78,7 +81,7 @@ class IndexPipeline(BasePipeline):
         chunks = self.create_chunks(documents)
 
         if self.embedding:
-            vectors = self.embedding.embed([chunk.text for chunk in chunks])
+            vectors = self.embedding.embed_documents([chunk.text for chunk in chunks])
 
         else:
             vectors = None

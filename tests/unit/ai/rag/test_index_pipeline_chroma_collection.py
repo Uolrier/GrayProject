@@ -7,15 +7,13 @@ from backend.app.ai.rag.vectorstore.chroma import (
 
 
 class DummyEmbedding:
-    def embed(self, texts):
+    def embed_documents(self, texts):
         return [[0.1, 0.2, 0.3] for _ in texts]
 
 
 class DummyDocument:
     def __init__(self):
-        self.id = "doc1"
-
-        self.content = "GrayProject RAG test document"
+        self.page_content = "GrayProject RAG test document"
 
         self.metadata = {"source": "test"}
 

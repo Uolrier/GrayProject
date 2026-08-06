@@ -11,12 +11,15 @@ class IndexUpdateManager:
         index_pipeline=None,
         metadata_manager=None,
         vector_store=None,
+        loader_adapter=None,
     ):
         self.index_pipeline = index_pipeline
 
         self.metadata_manager = metadata_manager
 
         self.vector_store = vector_store
+
+        self.loader_adapter = loader_adapter
 
     def execute(
         self,
@@ -44,7 +47,12 @@ class IndexUpdateManager:
         if self.index_pipeline is None:
             return None
 
-        return self.index_pipeline.run(task.path)
+        if self.loader_adapter is None:
+            return None
+
+        documents = self.loader_adapter.load(task.path)
+
+        return self.index_pipeline.run(documents)
 
     def add(
         self,
