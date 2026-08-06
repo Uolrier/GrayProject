@@ -1,3 +1,4 @@
+from ..incremental.scanner import FileScanner
 from .schema import RebuildRequest
 
 
@@ -46,11 +47,16 @@ class RebuildManager:
 
         documents = []
 
-        if self.scanner and self.document_loader:
-            files = self.scanner.scan(request.source_path)
+        if self.document_loader:
+            scanner = self.scanner
 
-            for file in files:
-                documents.extend(self.document_loader(file))
+            if scanner is None:
+                scanner = FileScanner(root_path=request.source_path)
+
+            files = scanner.scan()
+
+            for file_state in files.values():
+                documents.extend(self.document_loader(file_state.path))
 
         if self.pipeline:
             return self.pipeline.run(documents)

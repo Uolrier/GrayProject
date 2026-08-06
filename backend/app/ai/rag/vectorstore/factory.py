@@ -1,10 +1,12 @@
-from .chroma import ChromaVectorStore
+from .registry import get_vectorstore
 
 
 class VectorStoreFactory:
     @staticmethod
-    def create(name="chroma", **kwargs):
-        if name == "chroma":
-            return ChromaVectorStore(**kwargs)
+    def create(
+        name="chroma",
+        **kwargs,
+    ):
+        store_cls = get_vectorstore(name)
 
-        raise ValueError(f"Unknown vector store: {name}")
+        return store_cls(**kwargs)

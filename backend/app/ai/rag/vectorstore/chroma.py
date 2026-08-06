@@ -1,9 +1,11 @@
 import chromadb
 
 from .base import BaseVectorStore
+from .registry import register_vectorstore
 from .schema import SearchResult
 
 
+@register_vectorstore("chroma")
 class ChromaVectorStore(BaseVectorStore):
     def __init__(
         self,

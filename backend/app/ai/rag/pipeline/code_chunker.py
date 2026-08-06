@@ -102,6 +102,8 @@ class CodeChunker(BaseChunker):
             flags=re.MULTILINE,
         )
 
+        blocks = self._merge_python_blocks(blocks)
+
         return [block.strip() for block in blocks if block.strip()]
 
     def _merge_python_blocks(
