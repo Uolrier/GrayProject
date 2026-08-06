@@ -24,6 +24,7 @@ IGNORE_DIRS = {
     ".ruff_cache",
     "dist",
     "build",
+    "data",
 }
 
 # 忽略的文件
