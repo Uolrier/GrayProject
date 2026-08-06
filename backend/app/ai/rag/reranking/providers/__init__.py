@@ -1,4 +1,5 @@
 from ..registry import RerankerRegistry
+from .bge import BGEReranker
 from .dummy import DummyReranker
 
 RerankerRegistry.register(
@@ -6,6 +7,12 @@ RerankerRegistry.register(
     DummyReranker,
 )
 
+RerankerRegistry.register(
+    "bge",
+    BGEReranker,
+)
+
 __all__ = [
     "DummyReranker",
+    "BGEReranker",
 ]
