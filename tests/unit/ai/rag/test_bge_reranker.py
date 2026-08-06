@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
-from backend.app.ai.rag.reranking.providers.bge import BGEReranker
-from backend.app.ai.rag.reranking.schema import (
+from app.ai.rag.reranking.providers.bge import BGEReranker
+from app.ai.rag.reranking.schema import (
     RerankDocument,
     RerankRequest,
 )
