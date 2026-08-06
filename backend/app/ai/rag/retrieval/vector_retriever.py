@@ -13,20 +13,27 @@ class VectorRetriever(BaseRetriever):
         vector_store,
     ):
         self.embedding = embedding
-
         self.vector_store = vector_store
 
     def search(
         self,
         query: str,
         top_k: int = 5,
+        filters=None,
     ):
         vector = self.embedding.embed_text(query)
 
-        results = self.vector_store.query(
-            embedding=vector,
-            top_k=top_k,
-        )
+        if filters is None:
+            results = self.vector_store.query(
+                embedding=vector,
+                top_k=top_k,
+            )
+        else:
+            results = self.vector_store.query(
+                embedding=vector,
+                top_k=top_k,
+                filters=filters,
+            )
 
         return [
             RetrievedDocument(

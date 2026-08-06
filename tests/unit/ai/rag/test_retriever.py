@@ -11,12 +11,16 @@ class DummyVectorStore:
         self,
         embedding,
         top_k=5,
+        filters=None,
     ):
         from backend.app.ai.rag.vectorstore.schema import SearchResult
 
         return [
             SearchResult(
-                id="1", text="RAG document", score=0.9, metadata={"source": "test"}
+                id="1",
+                text="RAG document",
+                score=0.9,
+                metadata={"source": "test"},
             )
         ]
 

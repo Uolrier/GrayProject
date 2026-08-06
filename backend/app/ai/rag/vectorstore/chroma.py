@@ -56,10 +56,16 @@ class ChromaVectorStore(BaseVectorStore):
     def delete(self, ids):
         self.collection.delete(ids=ids)
 
-    def query(self, embedding, top_k=5):
+    def query(
+        self,
+        embedding,
+        top_k=5,
+        filters=None,
+    ):
         result = self.collection.query(
             query_embeddings=[embedding],
             n_results=top_k,
+            where=filters,
         )
 
         output = []
