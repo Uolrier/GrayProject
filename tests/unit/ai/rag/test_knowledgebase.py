@@ -1,0 +1,114 @@
+from unittest.mock import MagicMock, patch
+
+from app.ai.rag.knowledgebase.providers.local import (
+    LocalKnowledgeBase,
+)
+from app.ai.rag.knowledgebase.registry import (
+    KnowledgeBaseRegistry,
+)
+from app.ai.rag.knowledgebase.schema import (
+    KnowledgeBaseConfig,
+)
+
+
+def test_knowledge_base_registry():
+    registry = KnowledgeBaseRegistry()
+
+    registry.register(
+        "local",
+        LocalKnowledgeBase,
+    )
+
+    assert registry.contains("local")
+
+    assert registry.get("local") == LocalKnowledgeBase
+
+    assert "local" in registry.list()
+
+
+def test_local_knowledge_base_create():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+    )
+
+    with (
+        patch(
+            "app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"
+        ) as embedding_mock,
+        patch(
+            "app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"
+        ) as store_mock,
+    ):
+        embedding_mock.return_value = MagicMock()
+
+        store_mock.return_value = MagicMock()
+
+        kb = LocalKnowledgeBase(config)
+
+        assert kb.config.name == "test"
+
+        assert kb.embedding is not None
+
+        assert kb.vector_store is not None
+
+
+def test_local_knowledge_base_add():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+    )
+
+    with (
+        patch("app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"),
+        patch("app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"),
+    ):
+        kb = LocalKnowledgeBase(config)
+
+        kb.index_pipeline = MagicMock()
+
+        loader = MagicMock()
+
+        loader.load.return_value = ["document"]
+
+        with patch(
+            "app.ai.rag.knowledgebase.providers.local.LoaderFactory.create",
+            return_value=loader,
+        ):
+            kb.add(
+                path="demo.txt",
+                loader_type="text",
+            )
+
+            loader.load.assert_called_once()
+
+            kb.index_pipeline.run.assert_called_once()
+
+
+def test_local_knowledge_base_search():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+    )
+
+    with (
+        patch("app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"),
+        patch("app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"),
+    ):
+        kb = LocalKnowledgeBase(config)
+
+        kb.retriever = MagicMock()
+
+        kb.retriever.search.return_value = []
+
+        result = kb.search("hello")
+
+        assert result.query == "hello"
+
+        assert result.documents == []
