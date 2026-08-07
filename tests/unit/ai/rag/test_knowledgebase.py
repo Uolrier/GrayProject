@@ -137,3 +137,53 @@ def test_local_knowledge_base_delete():
             kb.delete()
 
             store.delete_collection.assert_called_once_with("test")
+
+
+def test_local_knowledge_base_auto_update():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+        root_path="demo",
+        auto_update=True,
+        watch_interval=10,
+    )
+
+    with (
+        patch("app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"),
+        patch("app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"),
+    ):
+        kb = LocalKnowledgeBase(config)
+
+        kb.enable_auto_update()
+
+        assert kb.incremental_manager is not None
+
+        assert kb.watcher is not None
+
+        kb.watcher.stop()
+
+
+def test_local_knowledge_base_disable_auto_update():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+        root_path="demo",
+    )
+
+    with (
+        patch("app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"),
+        patch("app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"),
+    ):
+        kb = LocalKnowledgeBase(config)
+
+        watcher = MagicMock()
+
+        kb.watcher = watcher
+
+        kb.disable_auto_update()
+
+        watcher.stop.assert_called_once()

@@ -28,6 +28,9 @@ class KnowledgeBaseManager:
 
         knowledge_base = KnowledgeBaseFactory.create(config)
 
+        if config.auto_update:
+            knowledge_base.enable_auto_update()
+
         self._knowledge_bases[config.name] = knowledge_base
 
         return knowledge_base
@@ -57,6 +60,12 @@ class KnowledgeBaseManager:
             raise KeyError(f"Knowledge base not found: {name}")
 
         knowledge_base = self._knowledge_bases.pop(name)
+
+        if hasattr(
+            knowledge_base,
+            "disable_auto_update",
+        ):
+            knowledge_base.disable_auto_update()
 
         knowledge_base.delete()
 

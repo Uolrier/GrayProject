@@ -4,6 +4,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.app.ai.rag.watcher.bootstrap import (
+    init_watchers,
+)
 from backend.app.core.exceptions import GrayException
 from backend.app.core.logger import logger
 from backend.app.core.rate_limit import RateLimiter
@@ -29,6 +32,19 @@ limiter = RateLimiter(
     capacity=60,
     refill_rate=1,
 )
+
+watcher_manager = init_watchers()
+
+
+@app.on_event("startup")
+async def startup_event():
+    watcher_manager.start_all()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    watcher_manager.stop_all()
+
 
 app.add_middleware(
     CORSMiddleware,

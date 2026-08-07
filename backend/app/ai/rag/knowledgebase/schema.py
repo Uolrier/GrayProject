@@ -21,6 +21,12 @@ class KnowledgeBaseConfig:
 
     metadata: dict[str, str] = field(default_factory=dict)
 
+    root_path: str | None = None
+
+    auto_update: bool = False
+
+    watch_interval: int = 30
+
 
 @dataclass(slots=True)
 class KnowledgeBaseSearchResult:
