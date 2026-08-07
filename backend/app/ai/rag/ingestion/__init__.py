@@ -1,5 +1,6 @@
 from . import loaders  # noqa: F401
 from .base import BaseDocumentLoader
+from .directory import DirectoryImporter
 from .factory import LoaderFactory
 from .readme import is_readme
 from .schema import Document
@@ -9,4 +10,5 @@ __all__ = [
     "BaseDocumentLoader",
     "LoaderFactory",
     "is_readme",
+    "DirectoryImporter",
 ]
