@@ -51,9 +51,7 @@ class RagChatService:
 
         return {
             "answer": answer,
-            "sources": self._extract_sources(
-                response,
-            ),
+            "sources": response.sources or [],
         }
 
     def _build_prompt(
@@ -76,21 +74,6 @@ Context:
 Question:
 {query}
 """
-
-    def _extract_sources(
-        self,
-        response,
-    ):
-        sources = []
-
-        for result in response.results:
-            metadata = result.metadata or {}
-
-            source = metadata.get("source")
-
-            if source:
-                sources.append(source)
-        return sources
 
     def stream_chat(
         self,

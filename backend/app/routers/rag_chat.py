@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from backend.app.ai.rag.chat.schema import (
     RagChatRequest,
+    RagChatResponse,
 )
 from backend.app.ai.rag.chat.service import (
     RagChatService,
@@ -31,7 +32,10 @@ def register_rag_chat_service(
     _service = service
 
 
-@router.post("/chat")
+@router.post(
+    "/chat",
+    response_model=RagChatResponse,
+)
 def rag_chat(
     request: RagChatRequest,
 ):

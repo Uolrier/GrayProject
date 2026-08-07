@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 
+from backend.app.ai.rag.source.schema import SourceReference
+
 
 class RagChatRequest(BaseModel):
     """
@@ -37,4 +39,4 @@ class RagChatResponse(BaseModel):
 
     answer: str
 
-    sources: list[str] = []
+    sources: list[SourceReference] = []

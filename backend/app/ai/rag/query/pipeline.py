@@ -1,3 +1,4 @@
+from backend.app.ai.rag.source.builder import SourceBuilder
 from backend.app.security.manager import (
     SecurityManager,
 )
@@ -21,8 +22,8 @@ class QueryPipeline(BaseQueryPipeline):
         self.retriever = retriever
         self.reranker = reranker
         self.context_builder = context_builder
-
         self.security_manager = security_manager or SecurityManager()
+        self.source_builder = SourceBuilder()
 
     def run(
         self,
@@ -40,6 +41,8 @@ class QueryPipeline(BaseQueryPipeline):
                 request.query,
                 documents,
             )
+
+        sources = self.source_builder.build(documents)
 
         results = []
 
@@ -93,4 +96,5 @@ class QueryPipeline(BaseQueryPipeline):
             query=request.query,
             results=results,
             context=context,
+            sources=sources,
         )

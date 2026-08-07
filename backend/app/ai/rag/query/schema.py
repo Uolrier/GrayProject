@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+from backend.app.ai.rag.source.schema import SourceReference
+
 
 @dataclass
 class QueryRequest:
@@ -27,3 +29,5 @@ class QueryResponse:
     results: List[QueryResult]
 
     context: Optional[str] = None
+
+    sources: List[SourceReference] | None = None
