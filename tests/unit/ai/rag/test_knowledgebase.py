@@ -112,3 +112,28 @@ def test_local_knowledge_base_search():
         assert result.query == "hello"
 
         assert result.documents == []
+
+
+def test_local_knowledge_base_delete():
+    config = KnowledgeBaseConfig(
+        name="test",
+        type="local",
+        embedding="bge",
+        vectordb="chroma",
+    )
+
+    with (
+        patch("app.ai.rag.knowledgebase.providers.local.EmbeddingFactory.create"),
+        patch("app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create"),
+    ):
+        store = MagicMock()
+
+        with patch(
+            "app.ai.rag.knowledgebase.providers.local.VectorStoreFactory.create",
+            return_value=store,
+        ):
+            kb = LocalKnowledgeBase(config)
+
+            kb.delete()
+
+            store.delete_collection.assert_called_once_with("test")
