@@ -1,3 +1,7 @@
+from backend.app.security.manager import (
+    SecurityManager,
+)
+
 from .base import BaseQueryPipeline
 from .schema import (
     QueryRequest,
@@ -12,10 +16,13 @@ class QueryPipeline(BaseQueryPipeline):
         retriever,
         reranker=None,
         context_builder=None,
+        security_manager=None,
     ):
         self.retriever = retriever
         self.reranker = reranker
         self.context_builder = context_builder
+
+        self.security_manager = security_manager or SecurityManager()
 
     def run(
         self,
@@ -26,6 +33,8 @@ class QueryPipeline(BaseQueryPipeline):
             top_k=request.top_k,
         )
 
+        documents = self.security_manager.filter_documents(documents)
+
         if self.reranker:
             documents = self.reranker.rank(
                 request.query,
@@ -35,9 +44,19 @@ class QueryPipeline(BaseQueryPipeline):
         results = []
 
         for doc in documents:
+            content = getattr(
+                doc,
+                "page_content",
+                getattr(
+                    doc,
+                    "content",
+                    "",
+                ),
+            )
+
             results.append(
                 QueryResult(
-                    content=doc.content,
+                    content=content,
                     score=getattr(
                         doc,
                         "score",

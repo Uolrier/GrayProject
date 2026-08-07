@@ -1,0 +1,15 @@
+security:
+
+  enabled: true
+
+
+  filters:
+
+    input_injection:
+
+      enabled: true
+
+
+    rag_injection:
+
+      enabled: true

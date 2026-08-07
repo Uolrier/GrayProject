@@ -18,11 +18,15 @@ from backend.app.llm.memory import (
 from backend.app.llm.schema import (
     ChatMessage,
 )
+from backend.app.security.manager import (
+    SecurityManager,
+)
 
 router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
 )
+security_manager = SecurityManager()
 
 
 @router.post("/stop")
@@ -49,6 +53,14 @@ async def chat_stream(request: Request):
     body = await request.json()
 
     prompt = body.get("message")
+
+    security_result = security_manager.check_input(prompt)
+
+    if not security_result.passed:
+        return {
+            "error": "Prompt injection detected",
+            "code": "PROMPT_INJECTION",
+        }
 
     session_id = body.get(
         "session_id",

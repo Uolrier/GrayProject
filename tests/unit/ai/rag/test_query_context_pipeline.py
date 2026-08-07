@@ -14,7 +14,7 @@ class DummyRetriever:
         top_k,
     ):
         class Doc:
-            content = "hello rag"
+            page_content = "hello rag"
 
             metadata = {"source": "test.md"}
 

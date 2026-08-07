@@ -191,6 +191,8 @@ class Settings:
 
     NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
 
+    SECURITY_CONFIG_PATH = BASE_DIR / "config" / "security.yaml"
+
 
 # ==========================
 # 单例配置对象
@@ -206,6 +208,21 @@ settings = Settings()
 MODEL_CONFIG_PATH = BASE_DIR / "config" / "models.yaml"
 
 NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
+
+SECURITY_CONFIG_PATH = BASE_DIR / "config" / "security.yaml"
+
+
+def load_security_config():
+    """
+    Load security configuration.
+    """
+
+    with open(
+        SECURITY_CONFIG_PATH,
+        "r",
+        encoding="utf-8",
+    ) as f:
+        return yaml.safe_load(f)
 
 
 def load_network_config():

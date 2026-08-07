@@ -4,7 +4,7 @@ from app.ai.rag.query.schema import QueryRequest
 
 class DummyDocument:
     def __init__(self):
-        self.content = "test document"
+        self.page_content = "test document"
         self.metadata = {"source": "test.md"}
         self.score = 0.95
 

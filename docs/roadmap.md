@@ -411,7 +411,7 @@ Phase 1 的职责只有一个：
 | ------------- | -------------- |
 | Phase2_Step48 | Query Pipeline |
 | Phase2_Step49 | Context 拼接     |
-| Phase2_Step50 | Prompt 注入      |
+| Phase2_Step50 | Security Pipeline V1（Prompt Injection Defense）|
 | Phase2_Step51 | RAG Chat API   |
 | Phase2_Step52 | 引用来源展示         |
 
