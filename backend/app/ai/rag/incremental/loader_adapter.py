@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from app.ai.rag.ingestion.factory import LoaderFactory
+from backend.app.ai.rag.ingestion.factory import LoaderFactory
 
 
 class DocumentLoaderAdapter:

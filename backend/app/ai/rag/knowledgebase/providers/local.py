@@ -1,15 +1,15 @@
 from pathlib import Path
 
-from app.ai.embeddings.factory import EmbeddingFactory
-from app.ai.rag.incremental.manager import IncrementalManager
-from app.ai.rag.incremental.scanner import FileScanner
-from app.ai.rag.incremental.tracker import FileTracker
-from app.ai.rag.ingestion.directory import DirectoryImporter
-from app.ai.rag.ingestion.factory import LoaderFactory
-from app.ai.rag.pipeline.index_pipeline import IndexPipeline
-from app.ai.rag.retrieval.vector_retriever import VectorRetriever
-from app.ai.rag.vectorstore.factory import VectorStoreFactory
-from app.ai.rag.watcher.local import LocalWatcher
+from backend.app.ai.embeddings.factory import EmbeddingFactory
+from backend.app.ai.rag.incremental.manager import IncrementalManager
+from backend.app.ai.rag.incremental.scanner import FileScanner
+from backend.app.ai.rag.incremental.tracker import FileTracker
+from backend.app.ai.rag.ingestion.directory import DirectoryImporter
+from backend.app.ai.rag.ingestion.factory import LoaderFactory
+from backend.app.ai.rag.pipeline.index_pipeline import IndexPipeline
+from backend.app.ai.rag.retrieval.vector_retriever import VectorRetriever
+from backend.app.ai.rag.vectorstore.factory import VectorStoreFactory
+from backend.app.ai.rag.watcher.local import LocalWatcher
 
 from ..base import BaseKnowledgeBase
 from ..schema import (

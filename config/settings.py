@@ -2,6 +2,7 @@
 GrayProject 全局配置加载器
 
 统一管理：
+
 - 环境变量
 - 项目路径
 - 服务配置
@@ -30,6 +31,63 @@ ENV_PATH = BASE_DIR / ".env"
 
 if ENV_PATH.exists():
     load_dotenv(ENV_PATH)
+
+
+# ==========================
+# YAML 配置路径
+# ==========================
+
+MODEL_CONFIG_PATH = BASE_DIR / "config" / "models.yaml"
+
+NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
+
+SECURITY_CONFIG_PATH = BASE_DIR / "config" / "security.yaml"
+
+EMBEDDING_CONFIG_PATH = BASE_DIR / "config" / "embedding.yaml"
+
+TOKENIZER_CONFIG_PATH = BASE_DIR / "config" / "tokenizer.yaml"
+
+
+# ==========================
+# YAML 加载函数
+# ==========================
+
+
+def load_yaml(path: Path):
+    """
+    Generic YAML loader.
+    """
+
+    with open(
+        path,
+        "r",
+        encoding="utf-8",
+    ) as f:
+        return yaml.safe_load(f)
+
+
+def load_model_config():
+    return load_yaml(
+        MODEL_CONFIG_PATH,
+    )
+
+
+def load_network_config():
+    return load_yaml(
+        NETWORK_CONFIG_PATH,
+    )
+
+
+def load_security_config():
+    return load_yaml(
+        SECURITY_CONFIG_PATH,
+    )
+
+
+def load_embedding_config():
+    return load_yaml(
+        EMBEDDING_CONFIG_PATH,
+    )
 
 
 # ==========================
@@ -68,18 +126,6 @@ class Settings:
     BACKEND_PORT = int(
         os.getenv(
             "BACKEND_PORT",
-            8000,
-        )
-    )
-
-    FLASK_ENV = os.getenv(
-        "FLASK_ENV",
-        "development",
-    )
-
-    FLASK_PORT = int(
-        os.getenv(
-            "FLASK_PORT",
             8000,
         )
     )
@@ -141,15 +187,43 @@ class Settings:
     # Embedding
     # ==========================
 
-    EMBEDDING_MODEL = os.getenv(
-        "EMBEDDING_MODEL",
-        "bge-small",
-    )
-
     OPENAI_EMBEDDING_MODEL = os.getenv(
         "OPENAI_EMBEDDING_MODEL",
         "text-embedding-3-small",
     )
+
+    @property
+    def embedding_provider(self):
+        """
+        Get embedding provider.
+
+        Example:
+            bge
+        """
+
+        config = load_embedding_config()
+
+        return config["embedding"]["provider"]
+
+    @property
+    def embedding_model(self):
+        """
+        Get embedding model name.
+        """
+
+        config = load_embedding_config()
+
+        return config["embedding"]["model"]
+
+    @property
+    def embedding_dimension(self):
+        """
+        Get embedding dimension.
+        """
+
+        config = load_embedding_config()
+
+        return config["embedding"]["dimension"]
 
     # ==========================
     # OpenAI
@@ -183,69 +257,23 @@ class Settings:
         "DEEPSEEK_MODEL",
         "deepseek-chat",
     )
+
     # ==========================
-    # Tokenizer
+    # Config Path
     # ==========================
 
-    TOKENIZER_CONFIG_PATH = BASE_DIR / "config" / "tokenizer.yaml"
+    TOKENIZER_CONFIG_PATH = TOKENIZER_CONFIG_PATH
 
-    NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
+    NETWORK_CONFIG_PATH = NETWORK_CONFIG_PATH
 
-    SECURITY_CONFIG_PATH = BASE_DIR / "config" / "security.yaml"
+    SECURITY_CONFIG_PATH = SECURITY_CONFIG_PATH
+
+    EMBEDDING_CONFIG_PATH = EMBEDDING_CONFIG_PATH
 
 
 # ==========================
-# 单例配置对象
+# 单例
 # ==========================
+
 
 settings = Settings()
-
-
-# ==========================
-# YAML 配置加载
-# ==========================
-
-MODEL_CONFIG_PATH = BASE_DIR / "config" / "models.yaml"
-
-NETWORK_CONFIG_PATH = BASE_DIR / "config" / "network.yaml"
-
-SECURITY_CONFIG_PATH = BASE_DIR / "config" / "security.yaml"
-
-
-def load_security_config():
-    """
-    Load security configuration.
-    """
-
-    with open(
-        SECURITY_CONFIG_PATH,
-        "r",
-        encoding="utf-8",
-    ) as f:
-        return yaml.safe_load(f)
-
-
-def load_network_config():
-    """
-    Load network timeout and retry configuration.
-    """
-
-    with open(
-        NETWORK_CONFIG_PATH,
-        "r",
-        encoding="utf-8",
-    ) as f:
-        return yaml.safe_load(f)
-
-
-def load_model_config():
-    """
-    Load model switching configuration.
-    """
-
-    with open(
-        MODEL_CONFIG_PATH,
-        "r",
-        encoding="utf-8",
-    ) as f:
-        return yaml.safe_load(f)

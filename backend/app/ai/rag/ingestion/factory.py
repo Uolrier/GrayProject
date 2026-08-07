@@ -1,6 +1,6 @@
 from typing import Type
 
-from app.core.registry import Registry
+from backend.app.core.registry import Registry
 
 from .base import BaseDocumentLoader
 

@@ -4,13 +4,23 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.app.ai.rag.runtime.manager import (
+    RAGRuntimeManager,
+)
 from backend.app.ai.rag.watcher.bootstrap import (
     init_watchers,
 )
 from backend.app.core.exceptions import GrayException
 from backend.app.core.logger import logger
 from backend.app.core.rate_limit import RateLimiter
-from backend.app.routers import chat, system
+from backend.app.routers import (
+    chat,
+    rag_chat,
+    system,
+)
+from backend.app.routers.rag_chat import (
+    register_rag_chat_service,
+)
 
 app = FastAPI(
     title="GrayProject API",
@@ -39,6 +49,8 @@ watcher_manager = init_watchers()
 @app.on_event("startup")
 async def startup_event():
     watcher_manager.start_all()
+
+    register_rag_chat_service(RAGRuntimeManager.create_chat_service())
 
 
 @app.on_event("shutdown")
@@ -71,6 +83,7 @@ async def rate_limit_middleware(
 # 注册路由
 app.include_router(system.router)
 app.include_router(chat.router)
+app.include_router(rag_chat.router)
 
 
 @app.get("/")

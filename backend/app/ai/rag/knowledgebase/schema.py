@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from app.ai.rag.retrieval.schema import RetrievedDocument
+from backend.app.ai.rag.retrieval.schema import RetrievedDocument
 
 
 @dataclass(slots=True)

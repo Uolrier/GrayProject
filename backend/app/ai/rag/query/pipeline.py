@@ -50,7 +50,11 @@ class QueryPipeline(BaseQueryPipeline):
                 getattr(
                     doc,
                     "content",
-                    "",
+                    getattr(
+                        doc,
+                        "text",
+                        "",
+                    ),
                 ),
             )
 
@@ -72,7 +76,7 @@ class QueryPipeline(BaseQueryPipeline):
             chunks = []
 
             for result in results:
-                from app.ai.rag.context import ContextChunk
+                from backend.app.ai.rag.context import ContextChunk
 
                 chunks.append(
                     ContextChunk(
