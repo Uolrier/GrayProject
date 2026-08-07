@@ -11,9 +11,11 @@ class QueryPipeline(BaseQueryPipeline):
         self,
         retriever,
         reranker=None,
+        context_builder=None,
     ):
         self.retriever = retriever
         self.reranker = reranker
+        self.context_builder = context_builder
 
     def run(
         self,
@@ -45,7 +47,27 @@ class QueryPipeline(BaseQueryPipeline):
                 )
             )
 
+        context = None
+
+        if self.context_builder:
+            chunks = []
+
+            for result in results:
+                from app.ai.rag.context import ContextChunk
+
+                chunks.append(
+                    ContextChunk(
+                        content=result.content,
+                        metadata=result.metadata,
+                    )
+                )
+
+            built_context = self.context_builder.build(chunks)
+
+            context = built_context.text
+
         return QueryResponse(
             query=request.query,
             results=results,
+            context=context,
         )
