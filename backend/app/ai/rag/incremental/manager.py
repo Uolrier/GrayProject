@@ -21,6 +21,7 @@ class IncrementalManager:
         index_updater=None,
         pipeline=None,
         metadata_manager=None,
+        document_state_manager=None,
     ):
         self.scanner = scanner
 
@@ -30,6 +31,7 @@ class IncrementalManager:
 
         self.metadata_manager = metadata_manager
 
+        self.document_state_manager = document_state_manager
         # Step32 compatibility
         if index_updater is not None:
             self.index_updater = index_updater
@@ -58,12 +60,44 @@ class IncrementalManager:
 
         changes = self.tracker.detect_changes(current_snapshot)
 
+        if self.document_state_manager:
+            self._update_document_states(changes)
+
         if self.index_updater and self.document_loader:
             self._apply_changes(changes)
 
         self.tracker.save(current_snapshot)
 
         return changes
+
+    def _update_document_states(
+        self,
+        changes: list[FileChange],
+    ):
+        from ..document_state.schema import (
+            DocumentStatus,
+        )
+
+        for change in changes:
+            path = change.path
+
+            if change.change_type == ChangeType.NEW:
+                self.document_state_manager.register(
+                    path,
+                    change.current.hash,
+                )
+
+            elif change.change_type == ChangeType.UPDATED:
+                self.document_state_manager.update_status(
+                    path,
+                    DocumentStatus.PARSING,
+                )
+
+            elif change.change_type == ChangeType.DELETED:
+                self.document_state_manager.update_status(
+                    path,
+                    DocumentStatus.DELETED,
+                )
 
     def _apply_changes(
         self,
@@ -80,11 +114,31 @@ class IncrementalManager:
                 for document in documents:
                     self.index_updater.add(document)
 
+                    if self.document_state_manager:
+                        from ..document_state.schema import (
+                            DocumentStatus,
+                        )
+
+                        self.document_state_manager.update_status(
+                            change.path,
+                            DocumentStatus.INDEXED,
+                        )
+
             elif change.change_type == ChangeType.UPDATED:
                 documents = self.document_loader(self._resolve_path(change.path))
 
                 for document in documents:
                     self.index_updater.update(document)
+
+                    if self.document_state_manager:
+                        from ..document_state.schema import (
+                            DocumentStatus,
+                        )
+
+                        self.document_state_manager.update_status(
+                            change.path,
+                            DocumentStatus.INDEXED,
+                        )
 
             elif change.change_type == ChangeType.DELETED:
                 document_id = change.document_id
@@ -99,6 +153,16 @@ class IncrementalManager:
 
                 if document_id:
                     self.index_updater.delete(document_id)
+
+                    if self.document_state_manager:
+                        from ..document_state.schema import (
+                            DocumentStatus,
+                        )
+
+                        self.document_state_manager.update_status(
+                            change.path,
+                            DocumentStatus.DELETED,
+                        )
 
     def _resolve_path(
         self,
