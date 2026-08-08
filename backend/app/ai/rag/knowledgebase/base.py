@@ -9,14 +9,10 @@ class BaseKnowledgeBase(ABC):
     """
 
     @abstractmethod
-    def add(
-        self,
-        path: str,
-    ):
+    def add(self, path: str):
         """
         Add documents into knowledge base.
         """
-
         pass
 
     @abstractmethod
@@ -24,29 +20,36 @@ class BaseKnowledgeBase(ABC):
         self,
         query: str,
         top_k: int = 5,
-    ) -> list[KnowledgeBaseSearchResult]:
+    ) -> KnowledgeBaseSearchResult:
         """
         Search documents from knowledge base.
         """
-
         pass
 
     @abstractmethod
-    def delete(
-        self,
-    ):
+    def delete(self):
         """
         Delete knowledge base.
         """
-
         pass
 
     @abstractmethod
-    def rebuild(
-        self,
-    ):
+    def rebuild(self):
         """
         Rebuild knowledge base index.
         """
+        pass
 
+    @abstractmethod
+    def enable_auto_update(self):
+        """
+        Enable automatic knowledge base updates.
+        """
+        pass
+
+    @abstractmethod
+    def disable_auto_update(self):
+        """
+        Disable automatic knowledge base updates.
+        """
         pass

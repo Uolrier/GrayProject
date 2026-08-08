@@ -20,13 +20,18 @@ export default defineConfig({
     server: {
         proxy: {
             "/chat": {
-                target:"http://127.0.0.1:8000",
-                changeOrigin:true
+                target: "http://127.0.0.1:8000",
+                changeOrigin: true
             },
 
             "/rag": {
-                target:"http://127.0.0.1:8000",
-                changeOrigin:true
+                target: "http://127.0.0.1:8000",
+                changeOrigin: true
+            },
+
+            "/knowledge-bases": {
+                target: "http://127.0.0.1:8000",
+                changeOrigin: true
             }
         }
     }

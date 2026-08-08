@@ -53,18 +53,30 @@ class LocalKnowledgeBase(BaseKnowledgeBase):
     def add(
         self,
         path: str,
-        loader_type: str,
     ):
         """
         Add documents into knowledge base.
+
+        Files are loaded according to their detected loader type.
+        Directories are imported recursively.
         """
 
-        loader = LoaderFactory.create(
-            loader_type,
-            path=path,
-        )
+        path_obj = Path(path)
 
-        documents = loader.load()
+        if path_obj.is_dir():
+            documents = self.directory_importer.import_directory(path_obj)
+        else:
+            loader_name = self.directory_importer._get_loader_name(path_obj)
+
+            if loader_name is None:
+                raise ValueError(f"Unsupported document type: {path_obj}")
+
+            loader = LoaderFactory.create(
+                loader_name,
+                path=str(path_obj),
+            )
+
+            documents = loader.load()
 
         return self.index_pipeline.run(documents)
 

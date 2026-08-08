@@ -101,3 +101,12 @@ class IndexUpdateManager:
             return None
 
         return self.index_pipeline.delete_document(document_id)
+
+    def delete_by_source(self, source: str):
+        if self.index_pipeline is None:
+            return None
+
+        if hasattr(self.index_pipeline, "delete_by_source"):
+            return self.index_pipeline.delete_by_source(source)
+
+        return {"deleted_source": source}

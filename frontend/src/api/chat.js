@@ -1,78 +1,66 @@
 export async function streamChat(
     message,
+    collection,
     onToken,
     onInit,
 ) {
-
     const response = await fetch(
         "/rag/chat/stream",
         {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
             },
-            body:JSON.stringify({
-                query:message,
+            body: JSON.stringify({
+                collection,
+                query: message,
             }),
         }
     );
 
-
-    if(!response.ok){
+    if (!response.ok) {
         throw new Error(
             `HTTP error:${response.status}`
         );
     }
 
-
     const reader =
         response.body.getReader();
-
 
     const decoder =
         new TextDecoder("utf-8");
 
-
     let buffer = "";
 
-
-    while(true){
-
+    while (true) {
         const {
             done,
             value,
         } = await reader.read();
 
-
-        if(done){
+        if (done) {
             break;
         }
-
 
         buffer += decoder.decode(
             value,
             {
-                stream:true,
+                stream: true,
             }
         );
-
 
         const events =
             buffer.split("\n\n");
 
-
         buffer =
             events.pop();
 
-
-        for(
+        for (
             const eventBlock
             of events
-        ){
-
+        ) {
             const lines =
                 eventBlock.split("\n");
-
 
             let event =
                 "message";
@@ -80,60 +68,45 @@ export async function streamChat(
             let data =
                 null;
 
-
-            for(
+            for (
                 const line
                 of lines
-            ){
-
-                if(
+            ) {
+                if (
                     line.startsWith("event:")
-                ){
-
+                ) {
                     event =
                         line
-                        .slice(6)
-                        .trim();
-
+                            .slice(6)
+                            .trim();
                 }
 
-
-                if(
+                if (
                     line.startsWith("data:")
-                ){
-
+                ) {
                     data =
                         line
-                        .slice(5)
-                        .trim();
-
+                            .slice(5)
+                            .trim();
                 }
             }
 
-
-            if(!data){
+            if (!data) {
                 continue;
             }
 
-
-            if(data==="[DONE]"){
+            if (data === "[DONE]") {
                 return;
             }
-
 
             const json =
                 JSON.parse(data);
 
-
-            if(event==="init"){
-
+            if (event === "init") {
                 onInit?.(
                     json.task_id
                 );
-
-            }
-            else if(json.content){
-
+            } else if (json.content) {
                 onToken(
                     json.content
                 );
@@ -167,6 +140,7 @@ export async function stopChat(taskId) {
 
 export async function ragChat(
     message,
+    collection,
 ) {
     const response = await fetch(
         "/rag/chat",
@@ -176,6 +150,7 @@ export async function ragChat(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
+                collection,
                 query: message,
             }),
         },

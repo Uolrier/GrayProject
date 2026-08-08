@@ -1,52 +1,26 @@
-from backend.app.ai.embeddings.factory import (
-    EmbeddingFactory,
-)
-from backend.app.ai.rag.chat.service import (
-    RagChatService,
-)
-from backend.app.ai.rag.context import (
-    SimpleContextBuilder,
-)
-from backend.app.ai.rag.query import (
-    QueryPipeline,
-)
-from backend.app.ai.rag.query.service import (
-    QueryService,
-)
-from backend.app.ai.rag.retrieval.vector_retriever import (
-    VectorRetriever,
-)
-from backend.app.ai.rag.vectorstore.factory import (
-    VectorStoreFactory,
-)
-from config.settings import (
-    load_embedding_config,
-    load_vectordb_config,
-)
+from backend.app.ai.rag.chat.service import RagChatService
+from backend.app.ai.rag.context import SimpleContextBuilder
+from backend.app.ai.rag.knowledgebase.manager import KnowledgeBaseManager
+from backend.app.ai.rag.query import QueryPipeline
+from backend.app.ai.rag.query.service import QueryService
 
 
 class RAGRuntimeManager:
     """
-    Build RAG application runtime.
+    Build RAG application runtime from a knowledge base.
     """
 
     @classmethod
-    def create_chat_service(cls):
-        embedding_config = load_embedding_config()
-
-        embedding = EmbeddingFactory.create(embedding_config["embedding"]["provider"])
-
-        vectordb_config = load_vectordb_config()
-
-        vector_store = VectorStoreFactory.create(
-            vectordb_config["vectordb"]["provider"],
-            persist_dir=vectordb_config["vectordb"]["path"],
+    def create_chat_service(
+        cls,
+        knowledge_base_manager: KnowledgeBaseManager,
+        knowledge_base_name: str,
+    ):
+        knowledge_base = knowledge_base_manager.get(
+            knowledge_base_name,
         )
 
-        retriever = VectorRetriever(
-            embedding=embedding,
-            vector_store=vector_store,
-        )
+        retriever = knowledge_base.retriever
 
         context_builder = SimpleContextBuilder(
             max_chunks=5,

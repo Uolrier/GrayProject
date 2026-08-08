@@ -1,4 +1,5 @@
 from .factory import KnowledgeBaseFactory
+from .persistence import KnowledgeBasePersistence
 from .schema import KnowledgeBaseConfig
 
 
@@ -12,8 +13,12 @@ class KnowledgeBaseManager:
     - retrieving instances
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        persistence: KnowledgeBasePersistence | None = None,
+    ):
         self._knowledge_bases = {}
+        self.persistence = persistence or KnowledgeBasePersistence()
 
     def create(
         self,
@@ -33,7 +38,29 @@ class KnowledgeBaseManager:
 
         self._knowledge_bases[config.name] = knowledge_base
 
+        self.persistence.save(
+            [knowledge_base.config for knowledge_base in self._knowledge_bases.values()]
+        )
+
         return knowledge_base
+
+    def load(self):
+        """
+        Restore persisted knowledge bases.
+        """
+
+        configs = self.persistence.load()
+
+        for config in configs:
+            if config.name in self._knowledge_bases:
+                continue
+
+            knowledge_base = KnowledgeBaseFactory.create(config)
+
+            self._knowledge_bases[config.name] = knowledge_base
+
+            if config.auto_update:
+                knowledge_base.enable_auto_update()
 
     def get(
         self,
@@ -61,13 +88,12 @@ class KnowledgeBaseManager:
 
         knowledge_base = self._knowledge_bases.pop(name)
 
-        if hasattr(
-            knowledge_base,
-            "disable_auto_update",
-        ):
-            knowledge_base.disable_auto_update()
-
+        knowledge_base.disable_auto_update()
         knowledge_base.delete()
+
+        self.persistence.save(
+            [knowledge_base.config for knowledge_base in self._knowledge_bases.values()]
+        )
 
     def list(
         self,
@@ -78,11 +104,12 @@ class KnowledgeBaseManager:
 
         return list(self._knowledge_bases.keys())
 
-    def clear(
-        self,
-    ):
+    def clear(self):
         """
         Clear all knowledge bases.
         """
+
+        for knowledge_base in self._knowledge_bases.values():
+            knowledge_base.disable_auto_update()
 
         self._knowledge_bases.clear()

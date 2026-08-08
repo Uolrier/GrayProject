@@ -118,21 +118,33 @@ class IndexPipeline(BasePipeline):
         """
         Update existing document.
 
-        Current implementation:
-        remove old index then add again.
+        Remove all existing chunks belonging to the
+        same source, then rebuild the document index.
         """
 
         if self.vector_store:
-            self.vector_store.delete(document.id)
+            source = document.metadata.get("source")
+
+            if source and hasattr(
+                self.vector_store,
+                "delete_by_source",
+            ):
+                self.vector_store.delete_by_source(source)
 
         return self.run([document])
 
     def delete_document(self, document_id: str):
-        """
-        Delete document from vector store.
-        """
-
         if self.vector_store:
-            self.vector_store.delete(document_id)
+            if hasattr(self.vector_store, "delete_by_document_id"):
+                self.vector_store.delete_by_document_id(document_id)
+            else:
+                self.vector_store.delete(document_id)
 
         return {"deleted": document_id}
+
+    def delete_by_source(self, source: str):
+        if self.vector_store is not None:
+            if hasattr(self.vector_store, "delete_by_source"):
+                self.vector_store.delete_by_source(source)
+
+        return {"deleted_source": source}

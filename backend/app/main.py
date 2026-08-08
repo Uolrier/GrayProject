@@ -5,38 +5,23 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from backend.app.ai.rag.runtime.manager import (
-    RAGRuntimeManager,
-)
-from backend.app.ai.rag.watcher.bootstrap import (
-    init_watchers,
+from backend.app.ai.rag.knowledgebase.manager import (
+    KnowledgeBaseManager,
 )
 from backend.app.core.exceptions import GrayException
 from backend.app.core.logger import logger
 from backend.app.core.rate_limit import RateLimiter
 from backend.app.routers import (
     chat,
+    knowledgebase,
     rag_chat,
     system,
 )
-from backend.app.routers.rag_chat import (
-    register_rag_chat_service,
+from backend.app.routers.knowledgebase import (
+    register_knowledge_base_manager as register_knowledge_base_router,
 )
-
-app = FastAPI(
-    title="GrayProject API",
-    description="""
-    GrayProject Personal AI Operating System Backend.
-
-    Provides APIs for:
-    - System management
-    - AI Agent services
-    - Knowledge management
-    - Local model interaction
-    """,
-    version="0.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+from backend.app.routers.rag_chat import (
+    register_knowledge_base_manager as register_rag_chat_manager,
 )
 
 limiter = RateLimiter(
@@ -44,36 +29,43 @@ limiter = RateLimiter(
     refill_rate=1,
 )
 
-watcher_manager = init_watchers()
+knowledge_base_manager = KnowledgeBaseManager()
+
+register_knowledge_base_router(
+    knowledge_base_manager,
+)
+
+register_rag_chat_manager(
+    knowledge_base_manager,
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    watcher_manager.start_all()
-    register_rag_chat_service(RAGRuntimeManager.create_chat_service())
+    knowledge_base_manager.load()
 
     try:
         yield
     finally:
-        watcher_manager.stop_all()
+        knowledge_base_manager.clear()
 
 
 app = FastAPI(
     title="GrayProject API",
     description="""
-    GrayProject Personal AI Operating System Backend.
-    Provides APIs for:
-    - System management
-    - AI Agent services
-    - Knowledge management
-    - Local model interaction
-    """,
+GrayProject Personal AI Operating System Backend.
+
+Provides APIs for:
+- System management
+- AI Agent services
+- Knowledge management
+- Local model interaction
+""",
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
 )
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -101,11 +93,15 @@ async def rate_limit_middleware(
 app.include_router(system.router)
 app.include_router(chat.router)
 app.include_router(rag_chat.router)
+app.include_router(knowledgebase.router)
 
 
 @app.get("/")
 def index():
-    return {"project": "GrayProject", "status": "backend running"}
+    return {
+        "project": "GrayProject",
+        "status": "backend running",
+    }
 
 
 @app.get("/health")
@@ -118,7 +114,9 @@ async def gray_exception_handler(
     request: Request,
     exc: GrayException,
 ):
-    logger.error(f"Gray Error: {exc.code} - {exc.message}")
+    logger.error(
+        f"Gray Error: {exc.code} - {exc.message}",
+    )
 
     return JSONResponse(
         status_code=exc.status_code,
@@ -137,7 +135,9 @@ async def global_exception_handler(
     request: Request,
     exc: Exception,
 ):
-    logger.exception(f"Unhandled Exception: {request.url}")
+    logger.exception(
+        f"Unhandled Exception: {request.url}",
+    )
 
     return JSONResponse(
         status_code=500,

@@ -5,6 +5,7 @@ import {
     stopChat,
 } from "@/api/chat";
 
+import { useKnowledgeBaseStore } from "@/stores/knowledgeBase";
 
 export const useChatStore = defineStore(
     "chat",
@@ -12,7 +13,6 @@ export const useChatStore = defineStore(
         state: () => ({
             messages: [],
             loading: false,
-
             currentTaskId: null,
         }),
 
@@ -41,12 +41,13 @@ export const useChatStore = defineStore(
                 role,
                 content
             ) {
+
                 this.messages.push({
                     role,
                     content,
                 });
-            },
 
+            },
 
             async sendMessage(
                 message
@@ -59,9 +60,17 @@ export const useChatStore = defineStore(
                     return;
                 }
 
+                const knowledgeBaseStore =
+                    useKnowledgeBaseStore();
+
+                const collection =
+                    knowledgeBaseStore.currentKnowledgeBase;
+
+                if (!collection) {
+                    return;
+                }
 
                 this.loading = true;
-
 
                 // 用户消息
 
@@ -70,37 +79,43 @@ export const useChatStore = defineStore(
                     message
                 );
 
-
-                // 创建assistant占位
+                // 创建 assistant 占位
 
                 this.addMessage(
                     "assistant",
                     ""
                 );
 
-
                 const assistantIndex =
                     this.messages.length - 1;
 
+                if (!collection) {
+
+                    this.messages[
+                        assistantIndex
+                    ].content =
+                        "请先选择知识库";
+
+                    this.loading = false;
+
+                    return;
+                }
 
                 try {
 
                     await streamChat(
                         message,
+                        collection,
 
-                        (token)=>{
-
+                        (token) => {
                             this.messages[
                                 assistantIndex
                             ].content += token;
-
                         },
 
-                        (taskId)=>{
-
+                        (taskId) => {
                             this.currentTaskId = taskId;
                         }
-
                     );
 
                 } catch (error) {

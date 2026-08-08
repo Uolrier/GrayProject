@@ -31,6 +31,14 @@ class ChromaVectorStore(BaseVectorStore):
     def delete_collection(self, name: str):
         self.client.delete_collection(name=name)
 
+    def delete_by_source(self, source: str):
+        self.collection.delete(
+            where={"source": source},
+        )
+
+    def delete_by_document_id(self, document_id: str):
+        self.collection.delete(where={"document_id": document_id})
+
     def list_collections(self):
         return self.client.list_collections()
 
@@ -44,7 +52,12 @@ class ChromaVectorStore(BaseVectorStore):
             ids.append(r.id)
             documents.append(r.text)
             embeddings.append(r.embedding)
-            metadatas.append(r.metadata)
+
+            metadata = dict(r.metadata)
+            if hasattr(r, "document_id") and r.document_id:
+                metadata["document_id"] = r.document_id
+
+            metadatas.append(metadata)
 
         self.collection.add(
             ids=ids,

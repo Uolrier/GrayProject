@@ -26,10 +26,11 @@ class LocalWatcher(BaseWatcher):
             try:
                 self.incremental_manager.update()
 
-            except Exception:
-                # watcher should not stop
-                # because one scan failed
-                pass
+            except Exception as e:
+                print(
+                    "Watcher error:",
+                    repr(e),
+                )
 
             time.sleep(self.interval)
 

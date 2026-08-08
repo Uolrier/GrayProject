@@ -81,7 +81,6 @@ def test_local_knowledge_base_add():
         ):
             kb.add(
                 path="demo.txt",
-                loader_type="text",
             )
 
             loader.load.assert_called_once()

@@ -154,15 +154,16 @@ class IncrementalManager:
                 if document_id:
                     self.index_updater.delete(document_id)
 
-                    if self.document_state_manager:
-                        from ..document_state.schema import (
-                            DocumentStatus,
-                        )
+                elif hasattr(self.index_updater, "delete_by_source"):
+                    self.index_updater.delete_by_source(self._resolve_path(change.path))
 
-                        self.document_state_manager.update_status(
-                            change.path,
-                            DocumentStatus.DELETED,
-                        )
+                if self.document_state_manager:
+                    from ..document_state.schema import DocumentStatus
+
+                    self.document_state_manager.update_status(
+                        change.path,
+                        DocumentStatus.DELETED,
+                    )
 
     def _resolve_path(
         self,

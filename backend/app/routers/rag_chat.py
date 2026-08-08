@@ -1,15 +1,15 @@
 import uuid
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from backend.app.ai.rag.chat.schema import (
     RagChatRequest,
     RagChatResponse,
 )
-from backend.app.ai.rag.chat.service import (
-    RagChatService,
-)
+from backend.app.ai.rag.chat.service import RagChatService
+from backend.app.ai.rag.knowledgebase.manager import KnowledgeBaseManager
+from backend.app.ai.rag.runtime.manager import RAGRuntimeManager
 from backend.app.api.stream import (
     encode_chunk,
     encode_done,
@@ -22,23 +22,39 @@ router = APIRouter(
     tags=["RAG Chat"],
 )
 
-
-_service: RagChatService | None = None
-
-
-def get_rag_chat_service():
-    if _service is None:
-        raise RuntimeError("RAG Chat service is not initialized")
-
-    return _service
+_knowledge_base_manager: KnowledgeBaseManager | None = None
 
 
-def register_rag_chat_service(
-    service: RagChatService,
+def register_knowledge_base_manager(
+    manager: KnowledgeBaseManager,
 ):
-    global _service
+    global _knowledge_base_manager
 
-    _service = service
+    _knowledge_base_manager = manager
+
+
+def get_knowledge_base_manager() -> KnowledgeBaseManager:
+    if _knowledge_base_manager is None:
+        raise RuntimeError("Knowledge base manager is not initialized")
+
+    return _knowledge_base_manager
+
+
+def get_rag_chat_service(
+    knowledge_base_name: str,
+) -> RagChatService:
+    manager = get_knowledge_base_manager()
+
+    try:
+        return RAGRuntimeManager.create_chat_service(
+            knowledge_base_manager=manager,
+            knowledge_base_name=knowledge_base_name,
+        )
+    except KeyError as exc:
+        raise HTTPException(
+            status_code=404,
+            detail=str(exc),
+        ) from exc
 
 
 @router.post(
@@ -48,7 +64,15 @@ def register_rag_chat_service(
 def rag_chat(
     request: RagChatRequest,
 ):
-    service = get_rag_chat_service()
+    if not request.collection:
+        raise HTTPException(
+            status_code=400,
+            detail="collection is required",
+        )
+
+    service = get_rag_chat_service(
+        request.collection,
+    )
 
     return service.chat(
         request.query,
@@ -75,7 +99,15 @@ async def stop_rag_generation(request):
 def rag_chat_stream(
     request: RagChatRequest,
 ):
-    service = get_rag_chat_service()
+    if not request.collection:
+        raise HTTPException(
+            status_code=400,
+            detail="collection is required",
+        )
+
+    service = get_rag_chat_service(
+        request.collection,
+    )
 
     task_id = str(uuid.uuid4())
 
