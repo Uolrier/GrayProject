@@ -1,3 +1,4 @@
+from backend.app.ai.rag.chat.schema import RagChatResponse
 from backend.app.llm.factory import ModelManager
 from backend.app.llm.schema import ChatMessage
 
@@ -49,23 +50,29 @@ class RagChatService:
             prompt,
         )
 
-        return {
-            "answer": answer,
-            "sources": response.sources or [],
-        }
+        return RagChatResponse(
+            answer=answer,
+            sources=response.sources or [],
+        )
 
     def _build_prompt(
         self,
         query: str,
         context: str | None,
-    ):
+    ) -> str:
         if context is None:
             context = ""
 
         return f"""
 You are a helpful AI assistant.
 
-Answer the question using the provided context.
+Instructions:
+- Use the provided context when it is relevant.
+- If the context does not contain useful information,
+answer using your general knowledge.
+- Do not mention the context unless necessary.
+- Provide a clear and helpful answer.
+
 
 Context:
 {context}

@@ -21,6 +21,7 @@ def encode_chunk(chunk: StreamChunk) -> str:
     }
 
     return (
+        "event: message\n"
         "data: "
         + json.dumps(
             payload,

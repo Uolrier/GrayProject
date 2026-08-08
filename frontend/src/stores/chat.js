@@ -88,7 +88,7 @@ export const useChatStore = defineStore(
                     await streamChat(
                         message,
 
-                        (token) => {
+                        (token)=>{
 
                             this.messages[
                                 assistantIndex
@@ -96,13 +96,12 @@ export const useChatStore = defineStore(
 
                         },
 
-                        (taskId) => {
+                        (taskId)=>{
 
                             this.currentTaskId = taskId;
-
                         }
-                    );
 
+                    );
 
                 } catch (error) {
 

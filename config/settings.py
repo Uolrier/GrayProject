@@ -47,10 +47,17 @@ EMBEDDING_CONFIG_PATH = BASE_DIR / "config" / "embedding.yaml"
 
 TOKENIZER_CONFIG_PATH = BASE_DIR / "config" / "tokenizer.yaml"
 
+VECTORDB_CONFIG_PATH = BASE_DIR / "config" / "vectordb.yaml"
 
 # ==========================
 # YAML 加载函数
 # ==========================
+
+
+def load_vectordb_config():
+    return load_yaml(
+        VECTORDB_CONFIG_PATH,
+    )
 
 
 def load_yaml(path: Path):

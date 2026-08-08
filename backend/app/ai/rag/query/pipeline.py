@@ -1,3 +1,4 @@
+from backend.app.ai.rag.context import ContextChunk
 from backend.app.ai.rag.source.builder import SourceBuilder
 from backend.app.security.manager import (
     SecurityManager,
@@ -79,8 +80,6 @@ class QueryPipeline(BaseQueryPipeline):
             chunks = []
 
             for result in results:
-                from backend.app.ai.rag.context import ContextChunk
-
                 chunks.append(
                     ContextChunk(
                         content=result.content,

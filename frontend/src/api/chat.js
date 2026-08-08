@@ -3,15 +3,155 @@ export async function streamChat(
     onToken,
     onInit,
 ) {
+
     const response = await fetch(
-        "/chat/stream",
+        "/rag/chat/stream",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body:JSON.stringify({
+                query:message,
+            }),
+        }
+    );
+
+
+    if(!response.ok){
+        throw new Error(
+            `HTTP error:${response.status}`
+        );
+    }
+
+
+    const reader =
+        response.body.getReader();
+
+
+    const decoder =
+        new TextDecoder("utf-8");
+
+
+    let buffer = "";
+
+
+    while(true){
+
+        const {
+            done,
+            value,
+        } = await reader.read();
+
+
+        if(done){
+            break;
+        }
+
+
+        buffer += decoder.decode(
+            value,
+            {
+                stream:true,
+            }
+        );
+
+
+        const events =
+            buffer.split("\n\n");
+
+
+        buffer =
+            events.pop();
+
+
+        for(
+            const eventBlock
+            of events
+        ){
+
+            const lines =
+                eventBlock.split("\n");
+
+
+            let event =
+                "message";
+
+            let data =
+                null;
+
+
+            for(
+                const line
+                of lines
+            ){
+
+                if(
+                    line.startsWith("event:")
+                ){
+
+                    event =
+                        line
+                        .slice(6)
+                        .trim();
+
+                }
+
+
+                if(
+                    line.startsWith("data:")
+                ){
+
+                    data =
+                        line
+                        .slice(5)
+                        .trim();
+
+                }
+            }
+
+
+            if(!data){
+                continue;
+            }
+
+
+            if(data==="[DONE]"){
+                return;
+            }
+
+
+            const json =
+                JSON.parse(data);
+
+
+            if(event==="init"){
+
+                onInit?.(
+                    json.task_id
+                );
+
+            }
+            else if(json.content){
+
+                onToken(
+                    json.content
+                );
+            }
+        }
+    }
+}
+
+export async function stopChat(taskId) {
+    const response = await fetch(
+        "/rag/chat/stop",
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                message,
+                task_id: taskId,
             }),
         }
     );
@@ -22,92 +162,23 @@ export async function streamChat(
         );
     }
 
-    const reader = response.body.getReader();
-
-    const decoder = new TextDecoder(
-        "utf-8"
-    );
-
-    let event = "message";
-
-    while (true) {
-
-        const {
-            done,
-            value,
-        } = await reader.read();
-
-        if (done) {
-            break;
-        }
-
-        const chunk = decoder.decode(
-            value,
-            {
-                stream: true,
-            }
-        );
-
-        const lines = chunk.split("\n");
-
-        for (const line of lines) {
-
-            if (line.startsWith("event:")) {
-                event = line.slice(6).trim();
-                continue;
-            }
-
-            if (!line.startsWith("data:")) {
-                continue;
-            }
-
-            const data = line.slice(5).trim();
-
-            if (!data) {
-                continue;
-            }
-
-            if (data === "[DONE]") {
-                return;
-            }
-
-            try {
-
-                const json = JSON.parse(data);
-
-                if (event === "init") {
-
-                    onInit?.(json.task_id);
-
-                } else if (json.content) {
-
-                    onToken(json.content);
-
-                }
-
-            } catch {
-
-                onToken(data);
-
-            }
-
-            event = "message";
-        }
-    }
+    return response.json();
 }
 
-export async function stopChat(taskId) {
+export async function ragChat(
+    message,
+) {
     const response = await fetch(
-        "/chat/stop",
+        "/rag/chat",
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                task_id: taskId,
+                query: message,
             }),
-        }
+        },
     );
 
     if (!response.ok) {

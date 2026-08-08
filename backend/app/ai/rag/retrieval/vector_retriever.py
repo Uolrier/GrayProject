@@ -19,21 +19,13 @@ class VectorRetriever(BaseRetriever):
         self,
         query: str,
         top_k: int = 5,
-        filters=None,
-    ):
+    ) -> list[RetrievedDocument]:
         vector = self.embedding.embed_text(query)
 
-        if filters is None:
-            results = self.vector_store.query(
-                embedding=vector,
-                top_k=top_k,
-            )
-        else:
-            results = self.vector_store.query(
-                embedding=vector,
-                top_k=top_k,
-                filters=filters,
-            )
+        results = self.vector_store.query(
+            embedding=vector,
+            top_k=top_k,
+        )
 
         return [
             RetrievedDocument(

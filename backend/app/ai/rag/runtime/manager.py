@@ -19,7 +19,10 @@ from backend.app.ai.rag.retrieval.vector_retriever import (
 from backend.app.ai.rag.vectorstore.factory import (
     VectorStoreFactory,
 )
-from config.settings import load_embedding_config
+from config.settings import (
+    load_embedding_config,
+    load_vectordb_config,
+)
 
 
 class RAGRuntimeManager:
@@ -33,8 +36,11 @@ class RAGRuntimeManager:
 
         embedding = EmbeddingFactory.create(embedding_config["embedding"]["provider"])
 
+        vectordb_config = load_vectordb_config()
+
         vector_store = VectorStoreFactory.create(
-            "chroma",
+            vectordb_config["vectordb"]["provider"],
+            persist_dir=vectordb_config["vectordb"]["path"],
         )
 
         retriever = VectorRetriever(

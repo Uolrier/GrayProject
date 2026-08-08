@@ -94,8 +94,8 @@ GrayProject 是一个个人 AI 管理系统项目。
     # verify answer
     # ------------------------
 
-    assert response["answer"]
+    assert response.answer
 
-    assert "GrayProject" in response["answer"]
+    assert "GrayProject" in response.answer
 
-    assert len(response["sources"]) > 0
+    assert len(response.sources) > 0
