@@ -1,15 +1,15 @@
 {
   "knowledge_bases": [
     {
-      "name": "watch_test",
+      "name": "test_grayproject",
       "type": "local",
       "embedding": "dummy",
       "vectordb": "chroma",
       "reranker": null,
       "metadata": {},
-      "root_path": "data/knowledge/watch_test",
-      "auto_update": true,
-      "watch_interval": 3
+      "root_path": null,
+      "auto_update": false,
+      "watch_interval": 30
     }
   ]
 }

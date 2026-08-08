@@ -1,6 +1,4 @@
-from backend.app.ai.rag.knowledgebase.providers.local import (
-    LocalKnowledgeBase,
-)
+from backend.app.ai.rag.knowledgebase.manager import KnowledgeBaseManager
 from backend.app.ai.rag.knowledgebase.schema import (
     KnowledgeBaseConfig,
 )
@@ -71,11 +69,12 @@ GrayProject 是一个个人 AI 管理系统项目。
         vectordb="chroma",
     )
 
-    kb = LocalKnowledgeBase(config)
+    knowledge_base_manager = KnowledgeBaseManager()
+
+    kb = knowledge_base_manager.create(config)
 
     result = kb.add(
         path=str(document),
-        loader_type="markdown",
     )
 
     assert result["documents"] == 1
@@ -86,7 +85,10 @@ GrayProject 是一个个人 AI 管理系统项目。
     # create rag service
     # ------------------------
 
-    service = RAGRuntimeManager.create_chat_service()
+    service = RAGRuntimeManager.create_chat_service(
+        knowledge_base_manager=knowledge_base_manager,
+        knowledge_base_name="test_grayproject",
+    )
 
     response = service.chat("GrayProject是什么?")
 
