@@ -39,6 +39,8 @@ class RebuildManager:
         if request.drop_collection and self.collection_manager:
             self.collection_manager.delete(request.collection)
 
+            self.collection_manager.create(request.collection)
+
         if self.metadata_manager:
             self.metadata_manager.clear_collection(request.collection)
 

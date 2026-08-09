@@ -1,0 +1,9 @@
+
+GrayProject Text Document 605
+
+This is a large scale RAG testing document.
+
+The knowledge base contains documents,
+chunks,
+embeddings,
+and retrieval information.

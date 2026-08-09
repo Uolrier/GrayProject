@@ -21,6 +21,7 @@ class CollectionManager:
 
         if self.vectorstore:
             self.vectorstore.create_collection(name)
+            self.vectorstore.use_collection(name)
 
         collection = CollectionInfo(
             name=name,

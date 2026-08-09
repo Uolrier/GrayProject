@@ -1,0 +1,10 @@
+{
+  "id": 658,
+  "project": "GrayProject",
+  "type": "knowledge",
+  "features": [
+    "rag",
+    "embedding",
+    "retrieval"
+  ]
+}

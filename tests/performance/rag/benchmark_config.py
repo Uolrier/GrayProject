@@ -1,0 +1,15 @@
+"""
+RAG performance benchmark configuration.
+"""
+
+SMALL_DOCUMENTS = 1000
+
+MEDIUM_DOCUMENTS = 10000
+
+LARGE_DOCUMENTS = 50000
+
+
+DEFAULT_TOP_K = 5
+
+
+QUERY_COUNT = 100

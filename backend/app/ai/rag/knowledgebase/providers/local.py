@@ -1,12 +1,24 @@
 from pathlib import Path
 
 from backend.app.ai.embeddings.factory import EmbeddingFactory
+from backend.app.ai.rag.collection.manager import (
+    CollectionManager,
+)
 from backend.app.ai.rag.incremental.manager import IncrementalManager
 from backend.app.ai.rag.incremental.scanner import FileScanner
 from backend.app.ai.rag.incremental.tracker import FileTracker
 from backend.app.ai.rag.ingestion.directory import DirectoryImporter
 from backend.app.ai.rag.ingestion.factory import LoaderFactory
+from backend.app.ai.rag.metadata.manager import (
+    MetadataManager,
+)
 from backend.app.ai.rag.pipeline.index_pipeline import IndexPipeline
+from backend.app.ai.rag.rebuild.manager import (
+    RebuildManager,
+)
+from backend.app.ai.rag.rebuild.schema import (
+    RebuildRequest,
+)
 from backend.app.ai.rag.retrieval.vector_retriever import VectorRetriever
 from backend.app.ai.rag.vectorstore.factory import VectorStoreFactory
 from backend.app.ai.rag.watcher.local import LocalWatcher
@@ -38,6 +50,16 @@ class LocalKnowledgeBase(BaseKnowledgeBase):
         self.embedding = EmbeddingFactory.create(config.embedding)
 
         self.vector_store = VectorStoreFactory.create(config.vectordb)
+
+        self.metadata_manager = MetadataManager()
+
+        self.collection_manager = CollectionManager(
+            vectorstore=self.vector_store,
+        )
+
+        self.collection_manager.create(
+            name=config.name,
+        )
 
         self.index_pipeline = IndexPipeline(
             embedding=self.embedding,
@@ -115,10 +137,29 @@ class LocalKnowledgeBase(BaseKnowledgeBase):
 
     def rebuild(self):
         """
-        Rebuild knowledge base.
+        Rebuild knowledge base index.
         """
 
-        raise NotImplementedError
+        if not self.config.root_path:
+            raise ValueError("root_path required for rebuild")
+
+        rebuild_manager = RebuildManager(
+            collection_manager=self.collection_manager,
+            metadata_manager=self.metadata_manager,
+            tracker=(
+                self.incremental_manager.tracker if self.incremental_manager else None
+            ),
+            document_loader=self._load_document,
+            pipeline=self.index_pipeline,
+        )
+
+        request = RebuildRequest(
+            collection=self.config.name,
+            source_path=self.config.root_path,
+            drop_collection=True,
+        )
+
+        return rebuild_manager.rebuild(request)
 
     def enable_auto_update(self):
         if not self.config.root_path:
