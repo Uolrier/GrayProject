@@ -1,4 +1,5 @@
 import hashlib
+from concurrent.futures import ThreadPoolExecutor
 from typing import Iterable, List
 
 from .base import BasePipeline
@@ -33,12 +34,14 @@ class IndexPipeline(BasePipeline):
         collection_name="grayproject",
         embedding_batch_size=32,
         embedding_cache=None,
+        parallel_workers=4,
     ):
         self.embedding = embedding
         self.vector_store = vector_store
         self.collection_name = collection_name
         self.embedding_batch_size = embedding_batch_size
         self.embedding_cache = embedding_cache
+        self.parallel_workers = max(1, parallel_workers)
 
         self.chunker = chunker if chunker else FixedLengthChunker()
 
@@ -147,6 +150,121 @@ class IndexPipeline(BasePipeline):
             "chunks": chunk_count,
         }
 
+    def run_parallel(
+        self,
+        documents: Iterable,
+        max_workers: int | None = None,
+    ):
+        """
+        Build the index using parallel embedding workers.
+
+        Chunk creation remains lightweight and deterministic.
+        Embedding batches are processed concurrently, while
+        vector-store writes remain serialized.
+        """
+        if self.embedding is None:
+            return {
+                "documents": 0,
+                "chunks": 0,
+            }
+
+        workers = self.parallel_workers if max_workers is None else max_workers
+
+        if workers <= 0:
+            raise ValueError("max_workers must be greater than zero")
+
+        batches = []
+        document_count = 0
+        batch = []
+
+        for document in documents:
+            document_count += 1
+
+            for chunk in self._create_document_chunks(document):
+                batch.append(chunk)
+
+                if len(batch) >= self.embedding_batch_size:
+                    batches.append(batch)
+                    batch = []
+
+        if batch:
+            batches.append(batch)
+
+        if not batches:
+            return {
+                "documents": document_count,
+                "chunks": 0,
+            }
+
+        chunk_count = 0
+
+        with ThreadPoolExecutor(
+            max_workers=workers,
+        ) as executor:
+            futures = [
+                executor.submit(
+                    self._embed_chunk_batch,
+                    current_batch,
+                )
+                for current_batch in batches
+            ]
+
+            # Consume results in submission order.
+            # This keeps indexing deterministic even though
+            # embedding work executes concurrently.
+            for future in futures:
+                embedded_chunks = future.result()
+
+                self._store_embedded_chunks(embedded_chunks)
+
+                chunk_count += len(embedded_chunks)
+
+        return {
+            "documents": document_count,
+            "chunks": chunk_count,
+        }
+
+    def _embed_chunk_batch(
+        self,
+        chunks: List[DocumentChunk],
+    ):
+        """
+        Embed one chunk batch.
+
+        This method is executed by parallel workers.
+        """
+        if not chunks:
+            return []
+
+        if self.embedding is None:
+            return []
+
+        embedding_pipeline = EmbeddingPipeline(
+            embedding=self.embedding,
+            cache=self.embedding_cache,
+        )
+
+        return embedding_pipeline.run(
+            chunks,
+            batch_size=len(chunks),
+        )
+
+    def _store_embedded_chunks(
+        self,
+        chunks,
+    ):
+        """
+        Store embedded chunks serially.
+
+        Vector stores are deliberately kept outside the
+        worker threads to avoid concurrent writes.
+        """
+        if not chunks:
+            return
+
+        if self.vector_store:
+            self.vector_store.add(chunks)
+
     def _index_chunks(
         self,
         chunks: List[DocumentChunk],
@@ -176,18 +294,9 @@ class IndexPipeline(BasePipeline):
         if self.embedding is None:
             return
 
-        embedding_pipeline = EmbeddingPipeline(
-            embedding=self.embedding,
-            cache=self.embedding_cache,
-        )
+        embedded_chunks = self._embed_chunk_batch(chunks)
 
-        embedded_chunks = embedding_pipeline.run(
-            chunks,
-            batch_size=len(chunks),
-        )
-
-        if self.vector_store:
-            self.vector_store.add(embedded_chunks)
+        self._store_embedded_chunks(embedded_chunks)
 
     def add_document(self, document):
         """
