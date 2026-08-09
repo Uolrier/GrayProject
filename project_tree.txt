@@ -1,0 +1,524 @@
+GrayProject
+├── .gray
+│   ├── tracker
+│   │   ├── auto_test.json
+│   │   ├── test.json
+│   │   └── watch_test.json
+│   └── knowledge_bases.json
+├── assets
+│   └── .gitkeep
+├── backend
+│   ├── app
+│   │   ├── ai
+│   │   │   ├── agents
+│   │   │   │   └── __init__.py
+│   │   │   ├── embeddings
+│   │   │   │   ├── providers
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── bge_embedding.py
+│   │   │   │   │   ├── dummy_embedding.py
+│   │   │   │   │   ├── jina_embedding.py
+│   │   │   │   │   └── openai_embedding.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py
+│   │   │   │   ├── factory.py
+│   │   │   │   └── registry.py
+│   │   │   ├── prompts
+│   │   │   │   ├── builtin
+│   │   │   │   │   ├── agent.txt
+│   │   │   │   │   ├── chat.txt
+│   │   │   │   │   └── rag.txt
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── loader.py
+│   │   │   │   ├── manager.py
+│   │   │   │   └── template.py
+│   │   │   ├── rag
+│   │   │   │   ├── cache
+│   │   │   │   │   ├── query
+│   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   ├── base.py
+│   │   │   │   │   │   ├── factory.py
+│   │   │   │   │   │   ├── key.py
+│   │   │   │   │   │   ├── memory.py
+│   │   │   │   │   │   └── schema.py
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── factory.py
+│   │   │   │   │   ├── key.py
+│   │   │   │   │   ├── memory.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── chat
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── service.py
+│   │   │   │   ├── collection
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── registry.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── context
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── builder.py
+│   │   │   │   │   ├── formatter.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── document_state
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   ├── status.py
+│   │   │   │   │   └── storage.py
+│   │   │   │   ├── incremental
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── loader_adapter.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── scanner.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── tracker.py
+│   │   │   │   ├── index_update
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── strategy.py
+│   │   │   │   ├── ingestion
+│   │   │   │   │   ├── loaders
+│   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   ├── cpp.py
+│   │   │   │   │   │   ├── git.py
+│   │   │   │   │   │   ├── html.py
+│   │   │   │   │   │   ├── java.py
+│   │   │   │   │   │   ├── javascript.py
+│   │   │   │   │   │   ├── json.py
+│   │   │   │   │   │   ├── markdown.py
+│   │   │   │   │   │   ├── pdf.py
+│   │   │   │   │   │   ├── python.py
+│   │   │   │   │   │   ├── text.py
+│   │   │   │   │   │   └── word.py
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── directory.py
+│   │   │   │   │   ├── factory.py
+│   │   │   │   │   ├── readme.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── knowledgebase
+│   │   │   │   │   ├── providers
+│   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   └── local.py
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── factory.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── persistence.py
+│   │   │   │   │   ├── registry.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── metadata
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── registry.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── pipeline
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── batch.py
+│   │   │   │   │   ├── chunker.py
+│   │   │   │   │   ├── code_chunker.py
+│   │   │   │   │   ├── embedding_pipeline.py
+│   │   │   │   │   ├── index_pipeline.py
+│   │   │   │   │   ├── markdown_chunker.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── semantic_chunker.py
+│   │   │   │   ├── query
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── builder.py
+│   │   │   │   │   ├── pipeline.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── service.py
+│   │   │   │   ├── rebuild
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── strategy.py
+│   │   │   │   ├── reranking
+│   │   │   │   │   ├── providers
+│   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   ├── bge.py
+│   │   │   │   │   │   ├── cross_encoder.py
+│   │   │   │   │   │   └── dummy.py
+│   │   │   │   │   ├── ranking
+│   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   ├── adapter.py
+│   │   │   │   │   │   ├── base.py
+│   │   │   │   │   │   ├── pipeline.py
+│   │   │   │   │   │   ├── schema.py
+│   │   │   │   │   │   └── strategies.py
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── factory.py
+│   │   │   │   │   ├── registry.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── retrieval
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── hybrid_retriever.py
+│   │   │   │   │   ├── multi_retriever.py
+│   │   │   │   │   ├── schema.py
+│   │   │   │   │   └── vector_retriever.py
+│   │   │   │   ├── runtime
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   └── manager.py
+│   │   │   │   ├── source
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── builder.py
+│   │   │   │   │   ├── formatter.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── vectorstore
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── chroma.py
+│   │   │   │   │   ├── factory.py
+│   │   │   │   │   ├── registry.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── watcher
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── base.py
+│   │   │   │   │   ├── bootstrap.py
+│   │   │   │   │   ├── local.py
+│   │   │   │   │   ├── manager.py
+│   │   │   │   │   └── schema.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── config.py
+│   │   │   │   ├── README.md
+│   │   │   │   └── schema.py
+│   │   │   ├── token_usage
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── counter.py
+│   │   │   │   ├── manager.py
+│   │   │   │   └── schema.py
+│   │   │   ├── tokenizers
+│   │   │   │   ├── providers
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── huggingface_tokenizer.py
+│   │   │   │   │   └── openai_tokenizer.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py
+│   │   │   │   ├── factory.py
+│   │   │   │   ├── manager.py
+│   │   │   │   └── registry.py
+│   │   │   └── __init__.py
+│   │   ├── api
+│   │   │   ├── __init__.py
+│   │   │   ├── health.py
+│   │   │   └── stream.py
+│   │   ├── core
+│   │   │   ├── __init__.py
+│   │   │   ├── error_logger.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── logger.py
+│   │   │   ├── rate_limit.py
+│   │   │   ├── registry.py
+│   │   │   ├── retry.py
+│   │   │   └── timeout.py
+│   │   ├── llm
+│   │   │   ├── debug
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── formatter.py
+│   │   │   │   └── logger.py
+│   │   │   ├── prompts
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── builder.py
+│   │   │   │   └── templates.py
+│   │   │   ├── providers
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── deepseek.py
+│   │   │   │   ├── openai_compatible.py
+│   │   │   │   └── openai_llm.py
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── config.py
+│   │   │   ├── context.py
+│   │   │   ├── context_manager.py
+│   │   │   ├── context_policy.py
+│   │   │   ├── factory.py
+│   │   │   ├── generation.py
+│   │   │   ├── generation_config.py
+│   │   │   ├── memory.py
+│   │   │   ├── registry.py
+│   │   │   ├── schema.py
+│   │   │   ├── session.py
+│   │   │   └── stream.py
+│   │   ├── routers
+│   │   │   ├── __init__.py
+│   │   │   ├── chat.py
+│   │   │   ├── knowledgebase.py
+│   │   │   ├── rag_chat.py
+│   │   │   └── system.py
+│   │   ├── runtime
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── dummy.py
+│   │   │   ├── huggingface.py
+│   │   │   └── registry.py
+│   │   ├── security
+│   │   │   ├── filters
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── input.py
+│   │   │   │   └── rag.py
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── injection.py
+│   │   │   ├── manager.py
+│   │   │   ├── rules.py
+│   │   │   └── schema.py
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── logs
+│   │   └── app.log
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── .gitkeep
+│   ├── README.md
+│   ├── requirements-dev.txt
+│   ├── requirements-lock.txt
+│   ├── requirements-prod.txt
+│   ├── requirements.txt
+│   └── run.py
+├── config
+│   ├── .gitkeep
+│   ├── __init__.py
+│   ├── constants.py
+│   ├── database.yaml
+│   ├── development.py
+│   ├── embedding.yaml
+│   ├── llm.yaml
+│   ├── logging.yaml
+│   ├── models.yaml
+│   ├── network.yaml
+│   ├── paths.py
+│   ├── production.py
+│   ├── providers.yaml
+│   ├── README.md
+│   ├── security.yaml
+│   ├── settings.py
+│   ├── system.yaml
+│   ├── tokenizer.yaml
+│   └── vectordb.yaml
+├── docs
+│   ├── architecture
+│   │   ├── llm_architecture.md
+│   │   └── rag_architecture.md
+│   ├── development
+│   │   ├── setup.md
+│   │   └── workflow.md
+│   ├── experiments
+│   │   └── README.md
+│   ├── versioning
+│   │   └── versioning.md
+│   ├── .gitkeep
+│   ├── architecture.md
+│   ├── decisions.md
+│   └── roadmap.md
+├── experiments
+│   └── .gitkeep
+├── frontend
+│   ├── public
+│   │   ├── favicon.svg
+│   │   └── icons.svg
+│   ├── src
+│   │   ├── api
+│   │   │   ├── chat.js
+│   │   │   ├── index.js
+│   │   │   ├── knowledgeBase.js
+│   │   │   ├── request.js
+│   │   │   └── system.js
+│   │   ├── components
+│   │   │   └── ChatBox.vue
+│   │   ├── router
+│   │   │   └── index.js
+│   │   ├── stores
+│   │   │   ├── chat.js
+│   │   │   └── knowledgeBase.js
+│   │   ├── views
+│   │   │   └── Chat.vue
+│   │   ├── App.vue
+│   │   ├── main.js
+│   │   └── style.css
+│   ├── .gitignore
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   └── vite.config.js
+├── logs
+│   └── app.log
+├── models
+│   └── .gitkeep
+├── scripts
+│   ├── __init__.py
+│   ├── check_env.py
+│   ├── clean.py
+│   ├── README.md
+│   ├── setup.py
+│   ├── start_backend.py
+│   ├── start_frontend.py
+│   └── stop_all.py
+├── tests
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── test_chat_stream.py
+│   │   ├── test_error_handler.py
+│   │   └── test_knowledgebase.py
+│   ├── integration
+│   │   ├── ai
+│   │   │   └── rag
+│   │   │       └── test_full_rag_pipeline.py
+│   │   ├── __init__.py
+│   │   ├── test_embedding_provider.py
+│   │   ├── test_model_switch.py
+│   │   ├── test_multi_provider.py
+│   │   └── test_provider_config.py
+│   ├── performance
+│   │   ├── __init__.py
+│   │   ├── locustfile.py
+│   │   ├── test_api_load.py
+│   │   └── test_llm_stress.py
+│   ├── unit
+│   │   ├── ai
+│   │   │   ├── embeddings
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── test_base.py
+│   │   │   │   ├── test_bge_embedding.py
+│   │   │   │   ├── test_factory.py
+│   │   │   │   ├── test_jina_embedding.py
+│   │   │   │   ├── test_openai_embedding.py
+│   │   │   │   └── test_registry.py
+│   │   │   ├── prompts
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── test_prompt.py
+│   │   │   ├── rag
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── test_batch_embedding.py
+│   │   │   │   ├── test_bge_reranker.py
+│   │   │   │   ├── test_chroma_collection.py
+│   │   │   │   ├── test_chroma_store.py
+│   │   │   │   ├── test_chunk_config.py
+│   │   │   │   ├── test_chunker.py
+│   │   │   │   ├── test_code_chunker.py
+│   │   │   │   ├── test_collection_manager.py
+│   │   │   │   ├── test_cpp_loader.py
+│   │   │   │   ├── test_cross_encoder.py
+│   │   │   │   ├── test_directory_importer.py
+│   │   │   │   ├── test_document.py
+│   │   │   │   ├── test_document_state.py
+│   │   │   │   ├── test_embedding_cache.py
+│   │   │   │   ├── test_embedding_pipeline.py
+│   │   │   │   ├── test_git_loader.py
+│   │   │   │   ├── test_html_loader.py
+│   │   │   │   ├── test_hybrid_retriever.py
+│   │   │   │   ├── test_incremental_index_update.py
+│   │   │   │   ├── test_incremental_manager.py
+│   │   │   │   ├── test_incremental_pipeline.py
+│   │   │   │   ├── test_incremental_scanner.py
+│   │   │   │   ├── test_incremental_tracker.py
+│   │   │   │   ├── test_index_pipeline.py
+│   │   │   │   ├── test_index_pipeline_chroma_collection.py
+│   │   │   │   ├── test_index_pipeline_collection.py
+│   │   │   │   ├── test_index_update.py
+│   │   │   │   ├── test_java_loader.py
+│   │   │   │   ├── test_javascript_loader.py
+│   │   │   │   ├── test_json_loader.py
+│   │   │   │   ├── test_knowledgebase.py
+│   │   │   │   ├── test_loader_adapter.py
+│   │   │   │   ├── test_loader_factory.py
+│   │   │   │   ├── test_markdown_chunker.py
+│   │   │   │   ├── test_markdown_loader.py
+│   │   │   │   ├── test_metadata.py
+│   │   │   │   ├── test_metadata_filter.py
+│   │   │   │   ├── test_multi_retriever.py
+│   │   │   │   ├── test_pdf_loader.py
+│   │   │   │   ├── test_python_loader.py
+│   │   │   │   ├── test_query_cache.py
+│   │   │   │   ├── test_query_context_pipeline.py
+│   │   │   │   ├── test_query_pipeline.py
+│   │   │   │   ├── test_ranking_adapter.py
+│   │   │   │   ├── test_ranking_pipeline.py
+│   │   │   │   ├── test_ranking_strategy.py
+│   │   │   │   ├── test_readme_parser.py
+│   │   │   │   ├── test_rebuild.py
+│   │   │   │   ├── test_reranker.py
+│   │   │   │   ├── test_retriever.py
+│   │   │   │   ├── test_retriever_topk.py
+│   │   │   │   ├── test_semantic_chunker.py
+│   │   │   │   ├── test_similarity_search.py
+│   │   │   │   ├── test_source_builder.py
+│   │   │   │   ├── test_source_formatter.py
+│   │   │   │   ├── test_source_pipeline.py
+│   │   │   │   ├── test_text_loader.py
+│   │   │   │   ├── test_watcher.py
+│   │   │   │   └── test_word_loader.py
+│   │   │   ├── token_usage
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── test_counter.py
+│   │   │   │   ├── test_manager.py
+│   │   │   │   └── test_schema.py
+│   │   │   ├── tokenizers
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── test_factory.py
+│   │   │   │   ├── test_huggingface_tokenizer.py
+│   │   │   │   └── test_manager.py
+│   │   │   └── __init__.py
+│   │   ├── core
+│   │   │   ├── test_error_logger.py
+│   │   │   ├── test_exceptions.py
+│   │   │   ├── test_rate_limit.py
+│   │   │   └── test_retry.py
+│   │   ├── llm
+│   │   │   ├── __init__.py
+│   │   │   ├── test_base.py
+│   │   │   ├── test_chat_system_prompt.py
+│   │   │   ├── test_context.py
+│   │   │   ├── test_context_manager.py
+│   │   │   ├── test_context_policy.py
+│   │   │   ├── test_context_truncation.py
+│   │   │   ├── test_factory.py
+│   │   │   ├── test_generation_config.py
+│   │   │   ├── test_generation_max_tokens.py
+│   │   │   ├── test_generation_temperature.py
+│   │   │   ├── test_generation_top_p.py
+│   │   │   ├── test_memory.py
+│   │   │   ├── test_prompt_builder.py
+│   │   │   ├── test_prompt_builder_debug.py
+│   │   │   ├── test_prompt_debug.py
+│   │   │   ├── test_prompt_injection.py
+│   │   │   ├── test_registry.py
+│   │   │   ├── test_response.py
+│   │   │   ├── test_schema.py
+│   │   │   ├── test_session.py
+│   │   │   └── test_stream.py
+│   │   ├── security
+│   │   │   ├── __init__.py
+│   │   │   ├── test_global_disable.py
+│   │   │   ├── test_injection.py
+│   │   │   ├── test_input_filter.py
+│   │   │   ├── test_manager.py
+│   │   │   ├── test_pipeline_integration.py
+│   │   │   ├── test_rag_filter.py
+│   │   │   └── test_schema.py
+│   │   └── __init__.py
+│   ├── .gitkeep
+│   ├── __init__.py
+│   ├── conftest.py
+│   └── README.md
+├── .env
+├── .gitignore
+├── .pre-commit-config.yaml
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── DEVELOPMENT.md
+├── LICENSE
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── tree.py
+├── VERSION
+└── 报告.md
