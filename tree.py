@@ -25,6 +25,10 @@ IGNORE_DIRS = {
     "dist",
     "build",
     "data",
+    ".DS_Store",
+    "project_tree.txt",
+    # large test datasets
+    "rag_large_dataset",
 }
 
 # 忽略的文件
