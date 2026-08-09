@@ -101,7 +101,9 @@ def test_incremental_large_update(
     print(first_stats)
     print(f"Time: {first_time:.4f}s")
 
-    assert first_stats["new"] == 1000
+    expected_documents = len([p for p in dataset.rglob("*") if p.is_file()])
+
+    assert first_stats["new"] == expected_documents
 
     # ------------------------
     # modify dataset

@@ -122,7 +122,9 @@ def test_large_rag_index(
     # verify
     # ------------------------
 
-    assert result["documents"] == 1000
+    expected_documents = len([p for p in dataset.rglob("*") if p.is_file()])
+
+    assert result["documents"] == expected_documents
 
     assert result["chunks"] > 0
 

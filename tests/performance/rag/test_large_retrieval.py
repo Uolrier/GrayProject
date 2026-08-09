@@ -16,7 +16,6 @@ from backend.app.ai.rag.vectorstore.chroma import (
 from tests.performance.rag.benchmark_config import (
     DEFAULT_TOP_K,
     QUERY_COUNT,
-    SMALL_DOCUMENTS,
 )
 
 
@@ -101,7 +100,9 @@ def test_large_rag_retrieval(
         str(dataset),
     )
 
-    assert result["documents"] == SMALL_DOCUMENTS
+    expected_documents = len([p for p in dataset.rglob("*") if p.is_file()])
+
+    assert result["documents"] == expected_documents
 
     # ------------------------
     # retrieval benchmark
