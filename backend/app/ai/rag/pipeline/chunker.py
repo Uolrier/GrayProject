@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Iterator
 
 from ..config import ChunkConfig
 from .schema import Chunk
@@ -16,14 +17,19 @@ class BaseChunker(ABC):
         """
         pass
 
+    def split_iter(self, text: str) -> Iterator[Chunk]:
+        """
+        Lazily split text into chunks.
+
+        The default implementation preserves compatibility
+        with existing chunkers.
+        """
+        yield from self.split(text)
+
 
 class FixedLengthChunker(BaseChunker):
     """
     Split text into fixed-length chunks.
-
-    Args:
-        chunk_size:
-            Maximum length of each chunk.
     """
 
     def __init__(
@@ -42,19 +48,9 @@ class FixedLengthChunker(BaseChunker):
 
         self.chunk_size = chunk_size
 
-    def split(
-        self,
-        text: str,
-    ) -> list[Chunk]:
-        """
-        Split text into fixed-size chunks.
-        """
-
-        chunks = []
-
+    def split_iter(self, text: str) -> Iterator[Chunk]:
         start = 0
         chunk_id = 0
-
         text_length = len(text)
 
         while start < text_length:
@@ -63,33 +59,25 @@ class FixedLengthChunker(BaseChunker):
                 text_length,
             )
 
-            chunks.append(
-                Chunk(
-                    content=text[start:end],
-                    metadata={
-                        "chunk_id": chunk_id,
-                        "start": start,
-                        "end": end,
-                    },
-                )
+            yield Chunk(
+                content=text[start:end],
+                metadata={
+                    "chunk_id": chunk_id,
+                    "start": start,
+                    "end": end,
+                },
             )
 
             chunk_id += 1
             start = end
 
-        return chunks
+    def split(self, text: str) -> list[Chunk]:
+        return list(self.split_iter(text))
 
 
 class OverlapChunker(BaseChunker):
     """
     Split text using sliding window overlap.
-
-    Args:
-        chunk_size:
-            Maximum length of each chunk.
-
-        overlap:
-            Number of overlapping characters.
     """
 
     def __init__(
@@ -120,19 +108,9 @@ class OverlapChunker(BaseChunker):
         self.chunk_size = chunk_size
         self.overlap = overlap
 
-    def split(
-        self,
-        text: str,
-    ) -> list[Chunk]:
-        """
-        Split text using sliding window.
-        """
-
-        chunks = []
-
+    def split_iter(self, text: str) -> Iterator[Chunk]:
         start = 0
         chunk_id = 0
-
         text_length = len(text)
 
         while start < text_length:
@@ -141,15 +119,13 @@ class OverlapChunker(BaseChunker):
                 text_length,
             )
 
-            chunks.append(
-                Chunk(
-                    content=text[start:end],
-                    metadata={
-                        "chunk_id": chunk_id,
-                        "start": start,
-                        "end": end,
-                    },
-                )
+            yield Chunk(
+                content=text[start:end],
+                metadata={
+                    "chunk_id": chunk_id,
+                    "start": start,
+                    "end": end,
+                },
             )
 
             chunk_id += 1
@@ -159,4 +135,5 @@ class OverlapChunker(BaseChunker):
 
             start = end - self.overlap
 
-        return chunks
+    def split(self, text: str) -> list[Chunk]:
+        return list(self.split_iter(text))

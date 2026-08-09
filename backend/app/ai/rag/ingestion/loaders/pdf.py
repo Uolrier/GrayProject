@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterator, List
 
 from pypdf import PdfReader
 
@@ -10,15 +10,16 @@ class PDFLoader(BaseDocumentLoader):
     """
     PDF document loader.
 
-    Converts PDF pages into Document objects.
+    Converts PDF pages into Document objects lazily.
     """
 
     def __init__(self, path: str):
         self.path = path
 
     def load(self) -> List[Document]:
-        documents = []
+        return list(self.iter_load())
 
+    def iter_load(self) -> Iterator[Document]:
         reader = PdfReader(self.path)
 
         for index, page in enumerate(reader.pages):
@@ -27,15 +28,11 @@ class PDFLoader(BaseDocumentLoader):
             if not text:
                 continue
 
-            documents.append(
-                Document(
-                    page_content=text,
-                    metadata={
-                        "source": self.path,
-                        "page": index + 1,
-                        "type": "pdf",
-                    },
-                )
+            yield Document(
+                page_content=text,
+                metadata={
+                    "source": self.path,
+                    "page": index + 1,
+                    "type": "pdf",
+                },
             )
-
-        return documents
