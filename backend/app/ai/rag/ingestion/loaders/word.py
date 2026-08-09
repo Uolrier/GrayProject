@@ -4,9 +4,11 @@ from typing import List
 from docx import Document as DocxDocument
 
 from ..base import BaseDocumentLoader
+from ..factory import LoaderFactory
 from ..schema import Document
 
 
+@LoaderFactory.register("word")
 class WordLoader(BaseDocumentLoader):
     """
     Loader for Microsoft Word documents (.docx).

@@ -1,4 +1,5 @@
 from app.ai.rag.ingestion.factory import LoaderFactory
+from app.ai.rag.ingestion.loaders.python import PythonLoader
 
 
 def test_text_loader_registered():
@@ -20,8 +21,12 @@ def test_python_loader_registered():
 
 
 def test_create_python_loader():
-    loader = LoaderFactory.create("python")
+    loader = LoaderFactory.create(
+        "python",
+        path="demo.py",
+    )
 
-    assert loader is not None
-
-    assert loader.__class__.__name__ == "PythonLoader"
+    assert isinstance(
+        loader,
+        PythonLoader,
+    )

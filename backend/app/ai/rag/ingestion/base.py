@@ -26,7 +26,14 @@ class BaseDocumentLoader(ABC):
         """
         Stream documents one by one.
 
-        The default implementation keeps backward compatibility
-        by delegating to load().
+        Supports loaders returning either:
+            - Document
+            - List[Document]
         """
-        yield from self.load()
+
+        result = self.load()
+
+        if isinstance(result, Document):
+            yield result
+        else:
+            yield from result

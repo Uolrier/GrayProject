@@ -64,7 +64,9 @@ class LocalKnowledgeBase(BaseKnowledgeBase):
         path_obj = Path(path)
 
         if path_obj.is_dir():
-            documents = self.directory_importer.import_directory(path_obj)
+            return self.index_pipeline.run_stream(
+                self.directory_importer.iter_import_directory(path_obj)
+            )
         else:
             loader_name = self.directory_importer._get_loader_name(path_obj)
 

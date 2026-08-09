@@ -7,15 +7,17 @@ from ..schema import Document
 
 @LoaderFactory.register("python")
 class PythonLoader(BaseDocumentLoader):
-    """
-    Loader for Python source files.
-    """
+    def __init__(self, path: str | None = None):
+        self.path = Path(path) if path else None
 
-    def load(self, path: str) -> list[Document]:
-        file_path = Path(path)
+    def load(self, path: str | None = None):
+        file_path = Path(path) if path else self.path
+
+        if file_path is None:
+            raise ValueError("path required")
 
         if not file_path.exists():
-            raise FileNotFoundError(path)
+            raise FileNotFoundError(file_path)
 
         content = file_path.read_text(encoding="utf-8")
 

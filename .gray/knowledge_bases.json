@@ -1,7 +1,7 @@
 {
   "knowledge_bases": [
     {
-      "name": "test_grayproject",
+      "name": "multiformat_test",
       "type": "local",
       "embedding": "dummy",
       "vectordb": "chroma",

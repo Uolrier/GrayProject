@@ -91,6 +91,7 @@ class IndexPipeline(BasePipeline):
                     metadata={
                         **document.metadata,
                         **chunk.metadata,
+                        "chunk_id": index,
                     },
                 )
             )

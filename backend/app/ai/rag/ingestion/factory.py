@@ -34,20 +34,24 @@ class LoaderFactory:
         """
         Create loader instance.
 
-        Args:
-            name:
-                Registered loader name.
+        Supports both loader styles:
 
-            kwargs:
-                Loader constructor arguments.
+        1. Constructor injection
 
-        Returns:
-            BaseDocumentLoader instance
+            Loader(path)
+
+        2. Runtime path passing
+
+            Loader()
         """
 
         loader_cls = loader_registry.get(name)
 
-        return loader_cls(**kwargs)
+        try:
+            return loader_cls(**kwargs)
+
+        except TypeError:
+            return loader_cls()
 
     @staticmethod
     def list_loaders():

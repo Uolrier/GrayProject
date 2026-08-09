@@ -3,9 +3,11 @@ from typing import Iterator, List
 from pypdf import PdfReader
 
 from ..base import BaseDocumentLoader
+from ..factory import LoaderFactory
 from ..schema import Document
 
 
+@LoaderFactory.register("pdf")
 class PDFLoader(BaseDocumentLoader):
     """
     PDF document loader.
