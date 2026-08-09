@@ -1,0 +1,14 @@
+[
+    {
+        "query": "如何创建知识库",
+        "expected_sources": [
+            "knowledgebase.py"
+        ]
+    },
+    {
+        "query": "如何执行向量检索",
+        "expected_sources": [
+            "vector_retriever.py"
+        ]
+    }
+]

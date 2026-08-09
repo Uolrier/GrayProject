@@ -1,0 +1,32 @@
+[
+    {
+        "query": "VectorRetriever 如何进行向量搜索？",
+        "expected_sources": [
+            "backend/app/ai/rag/retrieval/vector_retriever.py"
+        ]
+    },
+    {
+        "query": "知识库管理器负责什么？",
+        "expected_sources": [
+            "backend/app/ai/rag/knowledgebase/manager.py"
+        ]
+    },
+    {
+        "query": "索引构建流程是什么？",
+        "expected_sources": [
+            "backend/app/ai/rag/pipeline/index_pipeline.py"
+        ]
+    },
+    {
+        "query": "Chroma向量数据库如何查询？",
+        "expected_sources": [
+            "backend/app/ai/rag/vectorstore/chroma.py"
+        ]
+    },
+    {
+        "query": "QueryPipeline执行哪些步骤？",
+        "expected_sources": [
+            "backend/app/ai/rag/query/pipeline.py"
+        ]
+    }
+]
