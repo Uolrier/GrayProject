@@ -1,13 +1,13 @@
 {
   "knowledge_bases": [
     {
-      "name": "retrieval_test_kb",
+      "name": "rebuild_test_kb",
       "type": "local",
       "embedding": "dummy",
       "vectordb": "chroma",
       "reranker": null,
       "metadata": {},
-      "root_path": null,
+      "root_path": "/media/uolrier/本地磁盘/GrayProject/tests/assets/rag_large_dataset",
       "auto_update": false,
       "watch_interval": 30
     }
