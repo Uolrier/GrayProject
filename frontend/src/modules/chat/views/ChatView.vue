@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import ChatBox from "@/components/ChatBox.vue";
+import ChatBox from "@/modules/chat/components/ChatBox.vue";
 </script>

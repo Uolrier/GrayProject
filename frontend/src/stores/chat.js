@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import {
     streamChat,
     stopChat,
-} from "@/api/chat";
+} from "@/modules/chat/api/chat";
 
 import { useKnowledgeBaseStore } from "@/stores/knowledgeBase";
 

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-import { listKnowledgeBases } from "@/api/system";
+import { listKnowledgeBases } from "@/shared/api/system";
 
 export const useKnowledgeBaseStore = defineStore(
     "knowledgeBase",

@@ -1,0 +1,119 @@
+{
+  "background": {
+    "image": "/images/workspace-bg.jpg",
+    "size": "cover",
+    "position": "center",
+    "repeat": "no-repeat"
+  },
+
+  "locked": true,
+  "lockIcon": "/favicon.svg",
+
+  "panels": [
+
+    {
+      "id": "chat",
+
+      "zIndex":1,
+
+      "closable": true, 
+
+      "title": "AI Chat",
+
+      "image": "/images/workspace-bg1.jpg",
+
+      "width":500,
+      "height":400,
+
+
+      "position":{
+        "x":100,
+        "y":100
+      },
+
+
+      "rotate":0,
+
+      "radius":20,
+
+      "minimizable": true,
+
+      "visible": true,
+
+      "minimized": false
+    },
+
+
+    {
+      "id":"knowledge",
+      
+      "zIndex":2,
+      
+      "closable": true, 
+
+      "title":"Knowledge Base",
+
+      "image":"/images/workspace-bg3.jpg",
+
+      "width":400,
+
+      "height":300,
+
+
+      "position":{
+        "x":700,
+        "y":120
+      },
+
+
+      "rotate":-5,
+
+
+      "radius":30,
+
+      "minimizable": true,
+      
+      "visible": true,
+
+      "minimized": false
+    },
+
+
+    {
+      "id":"system",
+      
+      "zIndex":3,
+      
+      "closable": true, 
+
+      "title":"System Monitor",
+
+      "image":"/images/workspace-bg2.gif",
+
+      "width":200,
+
+      "height":150,
+
+
+      "position":{
+        "x":300,
+        "y":600
+      },
+
+
+      "rotate":10,
+
+
+      "radius":15,
+
+      "minimizable": true,
+
+      "visible": true,
+
+      "minimized": false
+    }
+
+
+  ]
+
+}
