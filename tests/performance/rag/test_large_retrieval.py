@@ -22,10 +22,7 @@ from tests.performance.rag.benchmark_config import (
 )
 
 
-@pytest.mark.skipif(
-    pytest.__version__ is None,
-    reason="benchmark only",
-)
+@pytest.mark.performance
 def test_large_rag_retrieval(
     tmp_path,
     monkeypatch,
@@ -83,7 +80,7 @@ def test_large_rag_retrieval(
     # ------------------------
 
     config = KnowledgeBaseConfig(
-        name="retrieval_test_kb",
+        name="large_retrieval_test_kb",
         type="local",
         embedding="dummy",
         vectordb="chroma",

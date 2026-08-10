@@ -103,10 +103,18 @@ export async function streamChat(
                 JSON.parse(data);
 
             if (event === "init") {
+
+                console.log(
+                    "receive init:",
+                    json
+                );
+
                 onInit?.(
                     json.task_id
                 );
-            } else if (json.content) {
+            } 
+            
+            else if (json.content) {
                 onToken(
                     json.content
                 );

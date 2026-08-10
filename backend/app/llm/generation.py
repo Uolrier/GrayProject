@@ -27,10 +27,8 @@ class GenerationManager:
     def cancel(self, task_id: str) -> bool:
         with self._lock:
             task = self._tasks.get(task_id)
-
             if task is None:
                 return False
-
             task.cancelled = True
             return True
 

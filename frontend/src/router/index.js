@@ -6,30 +6,29 @@ import WorkspaceView from "@/modules/workspace/views/WorkspaceView.vue";
 
 const router = createRouter({
 
-  history: createWebHistory(),
+    history: createWebHistory(),
 
-  routes: [
+    routes: [
 
-    {
-      path: "/",
-      redirect: "/chat",
-    },
+        {
+            path: "/",
+            redirect: "/workspace",
+        },
 
-    {
-      path: "/chat",
-      name: "chat",
-      component: ChatView,
-    },
+        {
+            path: "/chat",
+            name: "chat",
+            component: ChatView,
+        },
 
-    {
-      path: "/workspace",
-      name: "workspace",
-      component: WorkspaceView,
-    },
+        {
+            path: "/workspace",
+            name: "workspace",
+            component: WorkspaceView,
+        },
 
-  ],
+    ],
 
 });
-
 
 export default router;

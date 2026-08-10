@@ -24,9 +24,13 @@
 
         @close="closePanel"
 
-    />
+    >
 
+        <component
+            :is="getPanelComponent(panel)"
+        />
 
+        </WorkspacePanel>
 
     <WorkspaceToolbar
 
@@ -47,6 +51,10 @@
 
 
 <script setup>
+
+import ChatBox 
+from "@/modules/chat/components/ChatBox.vue";
+
 
 
 import {
@@ -138,8 +146,11 @@ const closedPanels = reactive(
 
 
 
+const components = {
 
+    ChatBox: ChatBox
 
+};
 
 
 function saveState(){
@@ -222,6 +233,19 @@ function updateRotate(panel,angle){
         angle
     );
     saveState();
+}
+
+function getPanelComponent(panel){
+
+    const map = {
+
+        chat: ChatBox,
+
+    };
+
+
+    return map[panel.id] || null;
+
 }
 
 </script>

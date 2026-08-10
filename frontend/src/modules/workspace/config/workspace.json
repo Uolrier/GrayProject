@@ -7,16 +7,18 @@
   },
 
   "locked": true,
-  "lockIcon": "/favicon.svg",
+  "lockIcon": "/Lock.jpg",
 
   "panels": [
 
     {
       "id": "chat",
 
+      "component": "ChatBox",
+
       "zIndex":1,
 
-      "closable": true, 
+      "closable": true,
 
       "title": "AI Chat",
 
@@ -25,12 +27,10 @@
       "width":500,
       "height":400,
 
-
       "position":{
         "x":100,
         "y":100
       },
-
 
       "rotate":0,
 
@@ -46,10 +46,12 @@
 
     {
       "id":"knowledge",
-      
+
+      "component": "KnowledgePanel",
+
       "zIndex":2,
-      
-      "closable": true, 
+
+      "closable": true,
 
       "title":"Knowledge Base",
 
@@ -59,20 +61,17 @@
 
       "height":300,
 
-
       "position":{
         "x":700,
         "y":120
       },
 
-
       "rotate":-5,
-
 
       "radius":30,
 
       "minimizable": true,
-      
+
       "visible": true,
 
       "minimized": false
@@ -81,10 +80,12 @@
 
     {
       "id":"system",
-      
+
+      "component": "SystemPanel",
+
       "zIndex":3,
-      
-      "closable": true, 
+
+      "closable": true,
 
       "title":"System Monitor",
 
@@ -94,15 +95,12 @@
 
       "height":150,
 
-
       "position":{
         "x":300,
         "y":600
       },
 
-
       "rotate":10,
-
 
       "radius":15,
 
@@ -113,7 +111,5 @@
       "minimized": false
     }
 
-
   ]
-
 }

@@ -167,58 +167,63 @@ const panelStyle = computed(()=>{
 
 <style scoped>
 
-.panel{
+.panel {
 
-position:absolute;
+    position:absolute;
 
-background-size:cover;
+    background-size:cover;
 
-background-position:center;
+    background-position:center;
 
-display:flex;
+    display:flex;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
-cursor:move;
+    cursor:move;
 
-user-select:none;
+    user-select:none;
+    -webkit-user-select:none;
 
-overflow:visible;
-
-
-border:
-3px solid rgba(255,255,255,0.75);
+    overflow:visible;
 
 
-outline:
-2px solid rgba(255,255,255,0.15);
+    border:
+    3px solid rgba(255,255,255,0.75);
 
 
-box-shadow:
-0 10px 30px rgba(0,0,0,0.35);
+    outline:
+    2px solid rgba(255,255,255,0.15);
 
 
-transition:
-0.2s ease;
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.35);
+
+
+    transition:
+    0.2s ease;
 
 }
 
-
-
 .title{
+
+position:absolute;
+
+top:15px;
+
+left:15px;
+
 
 background:
 rgba(0,0,0,0.35);
-
 
 backdrop-filter:
 blur(8px);
 
 
 padding:
-10px 20px;
+8px 16px;
 
 
 border-radius:
@@ -228,7 +233,7 @@ border-radius:
 color:white;
 
 
-font-size:24px;
+font-size:22px;
 
 
 font-weight:600;
@@ -240,12 +245,10 @@ letter-spacing:1px;
 text-shadow:
 0 2px 5px rgba(0,0,0,0.8);
 
+
+z-index:10;
+
 }
-
-
-
-
-
 
 .close{
 
@@ -385,5 +388,23 @@ cursor:grab;
 background:#aaa;
 
 }
+
+.content{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    overflow:hidden;
+
+    padding-top:55px;
+
+    box-sizing:border-box;
+
+    user-select:text;
+}
+
 
 </style>

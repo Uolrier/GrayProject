@@ -4,6 +4,9 @@ from pathlib import Path
 from backend.app.ai.rag.knowledgebase.manager import (
     KnowledgeBaseManager,
 )
+from backend.app.ai.rag.knowledgebase.persistence import (
+    KnowledgeBasePersistence,
+)
 from backend.app.ai.rag.knowledgebase.schema import (
     KnowledgeBaseConfig,
 )
@@ -51,7 +54,9 @@ def test_large_rebuild(
         root_path=str(dataset),
     )
 
-    manager = KnowledgeBaseManager()
+    manager = KnowledgeBaseManager(
+        persistence=KnowledgeBasePersistence(tmp_path / "knowledge_bases.json")
+    )
 
     kb = manager.create(config)
 

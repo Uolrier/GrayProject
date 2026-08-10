@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
 from backend.app.ai.rag.chat.schema import (
@@ -80,16 +80,15 @@ def rag_chat(
 
 
 @router.post("/chat/stop")
-async def stop_rag_generation(request):
+async def stop_rag_generation(
+    request: Request,
+):
     body = await request.json()
 
     task_id = body.get("task_id")
-
     if not task_id:
         return {"error": "task_id is required"}
-
     success = generation_manager.cancel(task_id)
-
     return {
         "success": success,
     }

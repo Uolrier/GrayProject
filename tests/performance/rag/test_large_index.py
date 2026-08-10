@@ -6,6 +6,9 @@ import pytest
 from backend.app.ai.rag.knowledgebase.manager import (
     KnowledgeBaseManager,
 )
+from backend.app.ai.rag.knowledgebase.persistence import (
+    KnowledgeBasePersistence,
+)
 from backend.app.ai.rag.knowledgebase.schema import (
     KnowledgeBaseConfig,
 )
@@ -84,7 +87,9 @@ def test_large_rag_index(
         vectordb="chroma",
     )
 
-    manager = KnowledgeBaseManager()
+    manager = KnowledgeBaseManager(
+        persistence=KnowledgeBasePersistence(path=tmp_path / "knowledge_bases.json")
+    )
 
     kb = manager.create(
         config,

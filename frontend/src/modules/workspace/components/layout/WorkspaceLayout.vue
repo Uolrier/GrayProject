@@ -9,11 +9,11 @@
 
             <img
                 :src="
-                props.locked
-                ?
-                '/icons/lock-close.svg'
-                :
-                '/icons/lock-open.svg'
+                    props.locked
+                    ?
+                    '/images/Lock-close.jpg'
+                    :
+                    '/images/Lock-open.jpg'
                 "
             />
 

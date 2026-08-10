@@ -1,4 +1,7 @@
 from backend.app.ai.rag.knowledgebase.manager import KnowledgeBaseManager
+from backend.app.ai.rag.knowledgebase.persistence import (
+    KnowledgeBasePersistence,
+)
 from backend.app.ai.rag.knowledgebase.schema import (
     KnowledgeBaseConfig,
 )
@@ -69,7 +72,9 @@ GrayProject 是一个个人 AI 管理系统项目。
         vectordb="chroma",
     )
 
-    knowledge_base_manager = KnowledgeBaseManager()
+    knowledge_base_manager = KnowledgeBaseManager(
+        persistence=KnowledgeBasePersistence(path=tmp_path / "knowledge_bases.json")
+    )
 
     kb = knowledge_base_manager.create(config)
 

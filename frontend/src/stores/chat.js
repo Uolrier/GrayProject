@@ -7,136 +7,303 @@ import {
 
 import { useKnowledgeBaseStore } from "@/stores/knowledgeBase";
 
+
+const STORAGE_KEY =
+    "gray_chat_messages";
+
+
+function loadMessages(){
+
+    try {
+
+        const data =
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+        return data
+            ? JSON.parse(data)
+            : [];
+
+    } catch(error){
+
+        console.error(
+            "load chat history failed:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+
+function saveMessages(messages){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(messages)
+    );
+
+}
+
+
+
 export const useChatStore = defineStore(
     "chat",
     {
+
         state: () => ({
-            messages: [],
-            loading: false,
-            currentTaskId: null,
+
+            messages:
+                loadMessages(),
+
+            loading:false,
+
+            currentTaskId:null,
+
         }),
 
-        actions: {
 
-            async stopGeneration() {
 
-                if (!this.currentTaskId) {
+        actions:{
+
+
+            save(){
+
+                saveMessages(
+                    this.messages
+                );
+
+            },
+
+
+
+            async stopGeneration(){
+
+
+                if(
+                    !this.currentTaskId
+                ){
                     return;
                 }
 
-                try {
+
+                try{
 
                     await stopChat(
                         this.currentTaskId
                     );
 
-                } finally {
 
-                    this.currentTaskId = null;
+                    const lastMessage =
+                        this.messages[
+                            this.messages.length - 1
+                        ];
+
+
+                    if(
+                        lastMessage &&
+                        lastMessage.role === "assistant"
+                    ){
+
+                        lastMessage.content +=
+                            "\n\n[已停止生成]";
+
+                    }
+
+
+                    this.save();
+
+
+                }finally{
+
+
+                    this.currentTaskId =
+                        null;
+
+
+                    this.loading =
+                        false;
+
 
                 }
+
             },
+
+
 
             addMessage(
                 role,
                 content
-            ) {
+            ){
+
 
                 this.messages.push({
+
                     role,
+
                     content,
+
                 });
+
+
+                this.save();
+
 
             },
 
+
+
             async sendMessage(
                 message
-            ) {
+            ){
 
-                if (
+
+                if(
                     !message ||
                     this.loading
-                ) {
+                ){
+
                     return;
+
                 }
+
+
 
                 const knowledgeBaseStore =
                     useKnowledgeBaseStore();
 
+
+
                 const collection =
                     knowledgeBaseStore.currentKnowledgeBase;
 
-                if (!collection) {
+
+
+                if(!collection){
+
                     return;
+
                 }
 
-                this.loading = true;
 
-                // 用户消息
+
+                this.loading=true;
+
+
 
                 this.addMessage(
                     "user",
                     message
                 );
 
-                // 创建 assistant 占位
+
 
                 this.addMessage(
                     "assistant",
                     ""
                 );
 
+
+
                 const assistantIndex =
                     this.messages.length - 1;
 
-                if (!collection) {
 
-                    this.messages[
-                        assistantIndex
-                    ].content =
-                        "请先选择知识库";
 
-                    this.loading = false;
+                try{
 
-                    return;
-                }
-
-                try {
 
                     await streamChat(
+
                         message,
+
                         collection,
 
-                        (token) => {
+
+                        (token)=>{
+
+
                             this.messages[
                                 assistantIndex
                             ].content += token;
+
+
+                            this.save();
+
+
                         },
 
-                        (taskId) => {
-                            this.currentTaskId = taskId;
+
+                        (taskId)=>{
+
+
+                            console.log(
+                                "store task id:",
+                                taskId
+                            );
+
+
+                            this.currentTaskId =
+                                taskId;
+
+
                         }
+
                     );
 
-                } catch (error) {
+
+
+                }catch(error){
+
 
                     this.messages[
                         assistantIndex
                     ].content =
                         "请求失败";
 
+
+                    this.save();
+
+
+
                     console.error(
                         error
                     );
 
-                } finally {
 
-                    this.loading = false;
+                }finally{
 
-                    this.currentTaskId = null;
+
+                    this.loading=false;
+
+
+                    this.currentTaskId=null;
+
 
                 }
+
+
             },
+
+
+            clearHistory(){
+
+
+                this.messages=[];
+
+
+                localStorage.removeItem(
+                    STORAGE_KEY
+                );
+
+
+            },
+
+
         },
+
     }
 );
