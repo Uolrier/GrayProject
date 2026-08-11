@@ -19,7 +19,7 @@
       "reranker": null,
       "metadata": {},
       "root_path": "data/knowledge/auto_test",
-      "auto_update": false,
+      "auto_update": true,
       "watch_interval": 30
     }
   ]

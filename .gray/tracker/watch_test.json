@@ -4,5 +4,17 @@
     "hash": "9b48a8f8315dad41b0026b24d823321a461dd447df6b9f44a19801f47c4b800d",
     "size": 8609,
     "modified_time": 1786193586.4460962
+  },
+  "k47_test.md": {
+    "path": "data/knowledge/watch_test/k47_test.md",
+    "hash": "19326132889f76a43b5f288c6f1a91038bcc5e9c574bf5d957c14eb36421f042",
+    "size": 451,
+    "modified_time": 1786439046.71462
+  },
+  "new_event.md": {
+    "path": "data/knowledge/watch_test/new_event.md",
+    "hash": "5d53805c289fe8ab013e0f08b108572cf3e47cb8a4ca55328d9490a2239426be",
+    "size": 318,
+    "modified_time": 1786439135.7622964
   }
 }
