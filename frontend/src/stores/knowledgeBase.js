@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-import { listKnowledgeBases } from "@/shared/api/system";
+import { listKnowledgeBases } from "@/shared/api/knowledgeBase";
 
 export const useKnowledgeBaseStore = defineStore(
     "knowledgeBase",
@@ -20,7 +20,7 @@ export const useKnowledgeBaseStore = defineStore(
                         await listKnowledgeBases();
 
                     this.knowledgeBases =
-                        data.knowledge_bases ?? [];
+                        data ?? [];
 
                     if (
                         this.knowledgeBases.length > 0 &&
